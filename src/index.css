@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --forest-900: #14281f;
+    --forest-800: #1c382b;
+    --forest-700: #264a39;
+    --forest-600: #335d48;
+    --sage-600: #59735d;
+    --sage-400: #8aa18e;
+    --sage-200: #c9d6cb;
+    --sage-100: #eef3ef;
+    --cream-50: #fbf9f4;
+    --cream-100: #f6f1e7;
+    --cream-200: #ece3d3;
+    --terracotta-500: #bf563b;
+    --terracotta-600: #a7452d;
+    --terracotta-100: #faeee9;
+  }
+
+  body {
+    background-color: #fbf9f4;
+    color: #243028;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
+/* Custom scrollbars & botanical subtle utilities */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1ede3;
+}
+::-webkit-scrollbar-thumb {
+  background: #c3d1c5;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ab09d;
+}
