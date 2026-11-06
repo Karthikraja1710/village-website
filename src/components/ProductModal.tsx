@@ -642,3 +642,4 @@ export const ProductModal: React.FC = () => {
     </div>
   );
 };
+

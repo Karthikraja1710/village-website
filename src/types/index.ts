@@ -157,3 +157,4 @@ export interface PrototypeSettings {
   standardShippingFee: number;
   taxRatePercent: number;
 }
+

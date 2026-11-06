@@ -11,10 +11,10 @@ export const PrototypeNoticeBanner: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#bf563b]/20 text-[#f5a894] border border-[#bf563b]/40">
             <span className="w-1.5 h-1.5 rounded-full bg-[#bf563b] animate-pulse"></span>
-            FUNCTIONAL PROTOTYPE
+            VILLAGE-TO-CITY BRIDGE
           </span>
           <p className="hidden sm:inline text-[#c9d6cb]">
-            Sample village farm data &amp; editable placeholders. No live transactions or unverified claims.
+            Delivering untainted rural harvests directly to city homes &amp; conscious tables across India &bull; Interactive Prototype
           </p>
         </div>
 
@@ -31,3 +31,4 @@ export const PrototypeNoticeBanner: React.FC = () => {
     </div>
   );
 };
+

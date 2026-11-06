@@ -27,33 +27,33 @@ export const AiAssistantModal: React.FC = () => {
 
   const quickPrompts = [
     {
-      label: 'Evening Calm & Herbal Infusions',
-      text: 'Herbal infusions for evening relaxation, calm, and soothing warmth without caffeine',
-      category: 'herbs',
-    },
-    {
-      label: 'Traditional Cold-Pressed Cooking',
-      text: 'Pure wood-pressed oils and bilona ghee for traditional cooking and rich natural aroma',
+      label: 'City Kitchen Clean Switch',
+      text: 'Replace chemical supermarket cooking oils and adulterated spices with pure village cold-pressed oils and stone-ground turmeric',
       category: 'oils',
     },
     {
-      label: 'Festive Grains & Scented Rice',
-      text: 'Heirloom rice and native unpolished grains for special recipes and comfort meals',
+      label: 'Urban Immunity & Calming Tea',
+      text: 'Herbal infusions for busy city schedules, evening calm, and daily wellness without caffeine',
+      category: 'herbs',
+    },
+    {
+      label: 'Heritage Grains for City Families',
+      text: 'Unpolished native millets and diabetic-friendly heirloom rice rich in natural fiber',
       category: 'grains',
     },
     {
-      label: 'Single-Origin Potent Spices',
-      text: 'High-curcumin turmeric and sun-ripened black peppercorns directly from hill farmers',
-      category: 'spices',
-    },
-    {
-      label: 'Raw Honey & Pure Jaggery',
-      text: 'Unrefined natural sweeteners sourced from wild forest trees and traditional cane pans',
+      label: 'Pure Unheated Sweeteners',
+      text: 'Unrefined natural raw honey from wild forest flora and traditional iron-boiled jaggery',
       category: 'honey',
     },
     {
-      label: 'Fresh Daily Harvest Greens',
-      text: 'Tender country vegetables and greens plucked fresh for family cooking',
+      label: 'High-Curcumin Single-Origin Spices',
+      text: 'High-curcumin turmeric and sun-ripened black peppercorns directly from hill farmers without lead or dyes',
+      category: 'spices',
+    },
+    {
+      label: 'Fresh Dawn Country Greens',
+      text: 'Tender country vegetables and greens plucked fresh for city family cooking',
       category: 'vegetables',
     },
   ];
@@ -356,3 +356,4 @@ export const AiAssistantModal: React.FC = () => {
     </div>
   );
 };
+

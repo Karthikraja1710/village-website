@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStore } from '../context/StoreContext';
 import { GROWER_SPOTLIGHTS, SOURCING_STEPS } from '../data/growers';
-import { Leaf, HeartHandshake, ShieldCheck, MapPin, ArrowRight, Award, Compass, Sun } from 'lucide-react';
+import { Leaf, HeartHandshake, ShieldCheck, MapPin, ArrowRight, Award, Compass, Sun, Building2, Globe, Truck, CheckCircle2 } from 'lucide-react';
 
 export const OurStoryPage: React.FC = () => {
   const { setActivePage, setSelectedCategoryFilter, setIsSettingsModalOpen } = useStore();
@@ -17,12 +17,77 @@ export const OurStoryPage: React.FC = () => {
           </div>
 
           <h1 className="font-serif font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.15]">
-            Bridging Ancient Village Roots with Conscious Modern Homes
+            Bridging Remote Village Roots with City Homes &amp; Modern Lives
           </h1>
 
           <p className="text-sm sm:text-base text-[#c9d6cb] leading-relaxed max-w-2xl mx-auto">
-            Root &amp; River was born from a simple belief: the purest nourishment comes from soil nurtured by patient, generational care—not industrial speed. We exist to honor rural growers and protect traditional foodways.
+            Traditional village farmers grow the purest, most nourishing foods on earth. Yet for decades, these precious harvests never reached city people or people abroad. Root &amp; River was founded to bridge this great divide.
           </p>
+        </div>
+      </section>
+
+      {/* The Rural-Urban Divide Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="p-8 sm:p-12 rounded-3xl bg-[#fffdfa] border border-[#e4dcce] shadow-sm space-y-8">
+          <div className="max-w-3xl space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
+              Our Founding Purpose
+            </span>
+            <h2 className="font-serif font-bold text-3xl sm:text-4xl text-[#1c382b]">
+              The Great Rural-Urban Disconnect — And How We Are Bridging It
+            </h2>
+            <p className="text-xs sm:text-sm text-[#526f58] leading-relaxed">
+              If you visit a remote Indian village, you will see farmers drinking pure golden turmeric milk from rhizomes dug hours earlier, cooking with oils pressed in wooden ghani pestles, and eating fragrant rice that retains its living nutrient bran.
+              <br /><br />
+              Yet, just a few hundred miles away in metropolitan cities—and thousands of miles away for foreign residents and diaspora—families are forced to consume chemically extracted oils, bleached jaggery, adulterated turmeric, and stale supermarket produce.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+            <div className="p-6 rounded-2xl bg-[#faeee9] border border-[#f0cfc5] space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#bf563b] block">
+                The Village Farmer's Reality
+              </span>
+              <h3 className="font-serif font-bold text-lg text-[#1c382b]">
+                Trapped by Isolation &amp; Middlemen
+              </h3>
+              <p className="text-xs text-[#526f58] leading-relaxed">
+                Smallholder growers with 1–3 acres have no direct access to metro city customers. They are forced to sell their pristine harvests to wholesale mandi traders at rock-bottom distress prices, where their pure crops are bulk-blended with inferior industrial grains.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#eef3ef] border border-[#c9d6cb] space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#2e6844] block">
+                The City Consumer's Dilemma
+              </span>
+              <h3 className="font-serif font-bold text-lg text-[#1c382b]">
+                Craving Authenticity, Getting Preservatives
+              </h3>
+              <p className="text-xs text-[#526f58] leading-relaxed">
+                City dwellers and international food lovers genuinely want unadulterated, wholesome food for their children and elders. But supermarket brands prioritize 18-month shelf-lives, chemical preservatives, solvent extraction, and artificial coloring over real nutrition.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-[#1c382b] text-white flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-1">
+              <strong className="font-serif font-bold text-lg text-white block">
+                Root &amp; River is the Direct Highway Between the Two
+              </strong>
+              <p className="text-xs text-[#c9d6cb]">
+                We establish local collection sheds in 18+ village clusters, package in recyclable eco-friendly containers, and deliver straight to city doorsteps across 28+ metros within 24 to 72 hours.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setSelectedCategoryFilter('all');
+                setActivePage('shop');
+              }}
+              className="px-6 py-3 rounded-xl bg-[#bf563b] hover:bg-[#a7452d] text-white font-serif font-bold text-xs shadow-md whitespace-nowrap cursor-pointer transition-colors"
+            >
+              Browse Village Catalog
+            </button>
+          </div>
         </div>
       </section>
 
@@ -215,3 +280,4 @@ export const OurStoryPage: React.FC = () => {
     </div>
   );
 };
+

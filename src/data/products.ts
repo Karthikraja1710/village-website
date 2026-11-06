@@ -1005,3 +1005,4 @@ export const SAMPLE_PRODUCTS: Product[] = [
     ],
   },
 ];
+

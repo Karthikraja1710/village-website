@@ -6,16 +6,18 @@ import { CATEGORIES } from '../data/products';
 import { 
   ArrowRight, 
   Sparkles, 
-  ShieldCheck, 
-  Clock, 
   MapPin, 
-  HeartHandshake, 
-  Award, 
   Leaf, 
   Truck, 
-  Search,
   CheckCircle2,
-  Calendar
+  Calendar,
+  Building2,
+  Globe,
+  Heart,
+  ShieldCheck,
+  AlertTriangle,
+  Zap,
+  Home
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -63,20 +65,20 @@ export const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Text */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#264a39] border border-[#335d48] text-xs font-semibold text-[#c9d6cb]">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#264a39] border border-[#335d48] text-xs font-semibold text-[#c9d6cb]">
               <span className="w-2 h-2 rounded-full bg-[#8aa18e] animate-ping" />
-              <span>Direct From 18+ Village Farming Collectives</span>
+              <span>The Village-to-City Bridge &bull; Rural Farms to Metro Doorsteps</span>
             </div>
 
             <h1 className="font-serif font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white">
-              Root &amp; River
-              <span className="block text-[#c9d6cb] font-normal text-2xl sm:text-3xl mt-2 italic">
-                “Goodness grown close to the earth.”
+              Pure Village Harvests,
+              <span className="block text-[#f5a894] font-normal text-2xl sm:text-3xl mt-2 italic font-serif">
+                Delivered Directly to City Tables.
               </span>
             </h1>
 
             <p className="text-sm sm:text-base text-[#c9d6cb] leading-relaxed max-w-xl">
-              Authentic farm produce, mountain turmeric, traditional herbs, raw wild forest honey, and wood-pressed oils. Hand-harvested in small village batches and brought straight from rural gardens to your family table.
+              Authentic village foods have historically stayed confined to remote hamlets, while city families were left with mass-processed supermarket substitutes. Root &amp; River creates the direct bridge: hand-harvested produce, wood-pressed oils, mountain turmeric, and sacred herbs transported safely from rural gardens straight into your city home.
             </p>
 
             {/* CTAs */}
@@ -102,7 +104,7 @@ export const HomePage: React.FC = () => {
                 }}
                 className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-[#fbf9f4] font-semibold text-sm border border-white/20 backdrop-blur-xs transition-all cursor-pointer"
               >
-                Our Village Story
+                How We Reach Cities
               </button>
 
               <button
@@ -111,23 +113,23 @@ export const HomePage: React.FC = () => {
                 className="px-4 py-3.5 rounded-xl bg-[#264a39] hover:bg-[#335d48] text-[#eef3ef] text-xs font-semibold border border-[#335d48] flex items-center gap-2 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-[#bf563b]" />
-                <span>AI Sourcing Advisor</span>
+                <span>City Kitchen Advisor</span>
               </button>
             </div>
 
             {/* Trust Chips */}
             <div className="pt-6 border-t border-[#264a39] grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs text-[#c9d6cb]">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#8aa18e] shrink-0" />
-                <span>100% Traceable to Village Origin</span>
+                <Truck className="w-4 h-4 text-[#8aa18e] shrink-0" />
+                <span>24-72h Direct Metro Delivery</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#8aa18e] shrink-0" />
-                <span>Stone-Ground &amp; Cold-Pressed</span>
+                <Building2 className="w-4 h-4 text-[#8aa18e] shrink-0" />
+                <span>Servicing 28+ Major Indian Cities</span>
               </div>
               <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
-                <CheckCircle2 className="w-4 h-4 text-[#8aa18e] shrink-0" />
-                <span>Zero Solvent Refining</span>
+                <Globe className="w-4 h-4 text-[#8aa18e] shrink-0" />
+                <span>Diaspora &amp; Global Inquiries</span>
               </div>
             </div>
           </div>
@@ -177,6 +179,137 @@ export const HomePage: React.FC = () => {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The Village-to-City Bridge Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="rounded-3xl bg-radial from-[#1e3d2f] to-[#14281f] text-white p-8 sm:p-12 border border-[#264a39] space-y-8 relative overflow-hidden">
+          {/* Subtle background glow */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#bf563b]/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="max-w-3xl space-y-3 relative z-10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#bf563b]/20 text-[#f5a894] border border-[#bf563b]/40 text-xs font-semibold uppercase tracking-wider">
+              <Building2 className="w-3.5 h-3.5" />
+              <span>The Great Disconnect Solved</span>
+            </span>
+            <h2 className="font-serif font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">
+              Why Pure Village Food Never Reached City People — Until Now
+            </h2>
+            <p className="text-xs sm:text-sm text-[#c9d6cb] leading-relaxed">
+              Village farmers cultivate the most nutrient-dense, chemical-free food on earth, but without cold chains, fair aggregation, or digital access, their harvests historically stayed within rural weekly haats. Meanwhile, families living in busy cities and people abroad were trapped buying mass-manufactured, chemically preserved supermarket foods.
+              <br /><br />
+              <strong className="text-white">Root &amp; River creates the direct pipeline:</strong> We collect fresh harvests straight at village collection sheds and rush them via temperature-stable eco-parcels to your urban apartment door in 24 to 72 hours.
+            </p>
+          </div>
+
+          {/* 3 Pillar Infographic Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 pt-2">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#264a39] flex items-center justify-center text-2xl">
+                🏡
+              </div>
+              <h3 className="font-serif font-bold text-lg text-white">
+                1. Sourced from Isolated Hamlets
+              </h3>
+              <p className="text-xs text-[#c9d6cb] leading-relaxed">
+                We work directly with tribal cooperatives in Bastar, smallholders in Jaintia Hills, and orchard stewards in Wayanad who are physically disconnected from city markets.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#264a39] flex items-center justify-center text-2xl">
+                🏙️
+              </div>
+              <h3 className="font-serif font-bold text-lg text-white">
+                2. Direct to 28+ Metro Cities
+              </h3>
+              <p className="text-xs text-[#c9d6cb] leading-relaxed">
+                Whether you reside in Mumbai, Delhi NCR, Bengaluru, Hyderabad, Pune, Chennai, or Kolkata, your order arrives fresh without sitting in wholesale mandi warehouses for weeks.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#264a39] flex items-center justify-center text-2xl">
+                🌍
+              </div>
+              <h3 className="font-serif font-bold text-lg text-white">
+                3. Built for Conscious People Everywhere
+              </h3>
+              <p className="text-xs text-[#c9d6cb] leading-relaxed">
+                Even foreign travelers and global diaspora who crave honest Indian heritage superfoods can trace every gram to the specific village soil where it was grown.
+              </p>
+            </div>
+          </div>
+
+          {/* Eye-Opening Comparison Table: Supermarket vs Village Direct */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-[#fffdfa] text-[#1c382b] space-y-4 shadow-lg relative z-10">
+            <div className="space-y-1">
+              <span className="text-[11px] font-semibold text-[#bf563b] uppercase tracking-wider block">
+                The City Shopper's Reality Check
+              </span>
+              <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#1c382b]">
+                City Supermarket Food vs. Root &amp; River Village Direct
+              </h3>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#e4dcce] text-[#59735d]">
+                    <th className="py-2.5 font-bold uppercase tracking-wider">Harvest Staple</th>
+                    <th className="py-2.5 font-bold uppercase tracking-wider text-[#a7452d]">City Supermarket Reality</th>
+                    <th className="py-2.5 font-bold uppercase tracking-wider text-[#2e6844]">Root &amp; River Village Direct</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#f0ece3]">
+                  <tr>
+                    <td className="py-3 font-semibold text-[#1c382b]">Turmeric Powder</td>
+                    <td className="py-3 text-[#7a483a]">Diluted with starch, artificial dye, low curcumin (1.5-2%)</td>
+                    <td className="py-3 text-[#264a39] font-medium">Single-origin Lakadong rhizomes, pure stone-milled, ~7.2% curcumin</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 font-semibold text-[#1c382b]">Cooking Oils</td>
+                    <td className="py-3 text-[#7a483a]">Extracted at 200°C with chemical hexane solvent &amp; synthetic bleaching</td>
+                    <td className="py-3 text-[#264a39] font-medium">Traditional wood-press (Vaagai Chekku) at &lt;38°C; zero refining</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 font-semibold text-[#1c382b]">Honey &amp; Sweeteners</td>
+                    <td className="py-3 text-[#7a483a]">Heavily adulterated with corn/sugar syrup, boiled &amp; micro-filtered</td>
+                    <td className="py-3 text-[#264a39] font-medium">Raw, unheated wild forest honey retaining live enzymes &amp; pollen</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 font-semibold text-[#1c382b]">Rice &amp; Grains</td>
+                    <td className="py-3 text-[#7a483a]">Chemically polished with talc/glucose; bran stripped of minerals</td>
+                    <td className="py-3 text-[#264a39] font-medium">Indigenous heritage grains unpolished or single-milled with fiber bran intact</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 font-semibold text-[#1c382b]">Greens &amp; Vegetables</td>
+                    <td className="py-3 text-[#7a483a]">4 to 7 days old after passing through 5 layers of wholesale middlemen</td>
+                    <td className="py-3 text-[#264a39] font-medium">Dawn sickle cut, packed in breathable leaf wraps, delivered next-day</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#526f58]">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#2e6844]" />
+                Direct village sourcing protects your family from metropolitan food adulteration.
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategoryFilter('all');
+                  setActivePage('shop');
+                }}
+                className="font-bold text-[#1c382b] hover:text-[#bf563b] flex items-center gap-1"
+              >
+                <span>Switch to Village Harvests Today</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
         </div>
@@ -425,6 +558,110 @@ export const HomePage: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* City Kitchen Voices & Urban Families */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
+            Reaching Modern Homes Everywhere
+          </span>
+          <h2 className="font-serif font-bold text-3xl sm:text-4xl text-[#1c382b]">
+            City Kitchen Stories
+          </h2>
+          <p className="text-xs sm:text-sm text-[#526f58]">
+            See how urban households across India are replacing adulterated supermarket products with pure village harvests.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 rounded-3xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] transition-all space-y-4 shadow-xs flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs text-[#526f58]">
+                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                  <Building2 className="w-3.5 h-3.5 text-[#59735d]" />
+                  Bengaluru, Karnataka
+                </span>
+                <span className="text-[#bf563b] font-medium">Verified City Resident</span>
+              </div>
+              <p className="text-xs text-[#243028] leading-relaxed italic">
+                &ldquo;In a high-paced city like Bengaluru, getting authentic cold-pressed coconut oil and high-curcumin Lakadong turmeric was impossible. Supermarket products are chemically bleached. Root &amp; River brought true village purity right into our apartment.&rdquo;
+              </p>
+            </div>
+            <div className="pt-3 border-t border-[#f0ece3] flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#1c382b] text-white flex items-center justify-center font-bold text-xs">
+                M
+              </div>
+              <div>
+                <span className="font-serif font-bold text-xs text-[#1c382b] block">Meera &amp; Anand S.</span>
+                <span className="text-[10px] text-[#526f58]">Indiranagar &bull; Regular Subscriber</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] transition-all space-y-4 shadow-xs flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs text-[#526f58]">
+                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                  <Building2 className="w-3.5 h-3.5 text-[#59735d]" />
+                  Mumbai, Maharashtra
+                </span>
+                <span className="text-[#bf563b] font-medium">Verified City Resident</span>
+              </div>
+              <p className="text-xs text-[#243028] leading-relaxed italic">
+                &ldquo;My grandmother grew up in rural Konkan and always complained that city supermarket spices have lost their aroma and soul. When the Tellicherry black pepper and A2 Bilona ghee arrived in Mumbai, she smiled and said ‘this is the true village taste of my childhood’.&rdquo;
+              </p>
+            </div>
+            <div className="pt-3 border-t border-[#f0ece3] flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#1c382b] text-white flex items-center justify-center font-bold text-xs">
+                P
+              </div>
+              <div>
+                <span className="font-serif font-bold text-xs text-[#1c382b] block">Priya &amp; Dr. Kulkarni</span>
+                <span className="text-[10px] text-[#526f58]">Worli &bull; 4 Orders Received</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] transition-all space-y-4 shadow-xs flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs text-[#526f58]">
+                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                  <Building2 className="w-3.5 h-3.5 text-[#59735d]" />
+                  Delhi NCR
+                </span>
+                <span className="text-[#bf563b] font-medium">Verified City Resident</span>
+              </div>
+              <p className="text-xs text-[#243028] leading-relaxed italic">
+                &ldquo;Living in a metro city, we needed clean food for our children without chemical preservatives or artificial food polish. The aromatic Gobindobhog rice and raw wild forest honey have completely transformed our family meals.&rdquo;
+              </p>
+            </div>
+            <div className="pt-3 border-t border-[#f0ece3] flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#1c382b] text-white flex items-center justify-center font-bold text-xs">
+                K
+              </div>
+              <div>
+                <span className="font-serif font-bold text-xs text-[#1c382b] block">Kabir &amp; Shreya Mehta</span>
+                <span className="text-[10px] text-[#526f58]">Vasant Kunj &bull; Household Staples</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Metro Reach Bar */}
+        <div className="p-4 rounded-2xl bg-[#eef3ef] border border-[#c9d6cb] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#1c382b]">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-[#1c382b] text-white">
+              <Truck className="w-4 h-4 text-[#8aa18e]" />
+            </div>
+            <span>
+              <strong>Delivering to 28+ Major Cities:</strong> Mumbai, Bengaluru, Delhi NCR, Hyderabad, Chennai, Pune, Kolkata, Ahmedabad, Jaipur, Kochi &amp; beyond.
+            </span>
+          </div>
+          <span className="text-[11px] font-semibold text-[#526f58] bg-white px-3 py-1 rounded-full border border-[#c9d6cb]">
+            Express Transit: 24 - 72 Hours
+          </span>
         </div>
       </section>
 
