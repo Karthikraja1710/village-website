@@ -113,3 +113,4 @@ export const VILLAGE_BRANDS: VillageBrand[] = [
     heroImage: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80',
   },
 ];
+
