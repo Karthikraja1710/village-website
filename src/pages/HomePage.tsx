@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/ProductCard';
 import { SOURCING_STEPS, GROWER_SPOTLIGHTS } from '../data/growers';
@@ -15,9 +15,15 @@ import {
   Globe,
   Heart,
   ShieldCheck,
-  AlertTriangle,
-  Zap,
-  Home
+  Check,
+  Tag,
+  Users,
+  Award,
+  ChevronRight,
+  Sprout,
+  HeartPulse,
+  Flame,
+  Star
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -27,20 +33,31 @@ export const HomePage: React.FC = () => {
     setSelectedCategoryFilter, 
     setIsAiAssistantOpen,
     openProductDetails,
-    showToast
+    showToast,
+    formatPrice
   } = useStore();
 
-  const [newsletterEmail, setNewsletterEmail] = React.useState('');
+  const [activeCatalogTab, setActiveCatalogTab] = useState<string>('all');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [copiedCoupon, setCopiedCoupon] = useState(false);
 
-  const featuredProducts = products.slice(0, 6);
-  const seasonalSelections = products.filter(
-    (p) => p.badge === 'Seasonal Harvest' || p.badge === 'Harvest of the Day' || p.badge === 'Seasonal Pick'
-  );
+  // Helper to count products per category
+  const getCategoryCount = (catId: string) => {
+    if (catId === 'all') return products.length;
+    return products.filter((p) => p.category === catId).length;
+  };
 
   const handleCategoryClick = (catId: string) => {
     setSelectedCategoryFilter(catId);
     setActivePage('shop');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCopyCoupon = () => {
+    navigator.clipboard?.writeText('VILLAGE10');
+    setCopiedCoupon(true);
+    showToast('Coupon Copied!', 'Use code VILLAGE10 at checkout for ₹100 off your order.', 'success');
+    setTimeout(() => setCopiedCoupon(false), 2500);
   };
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -55,128 +72,213 @@ export const HomePage: React.FC = () => {
     }
   };
 
+  // Filtered products for the catalog showcase
+  const displayedProducts = activeCatalogTab === 'all' 
+    ? products.slice(0, 8) 
+    : products.filter(p => p.category === activeCatalogTab).slice(0, 8);
+
+  const seasonalPicks = products.filter(
+    (p) => p.badge === 'Seasonal Harvest' || p.badge === 'Harvest of the Day' || p.badge === 'Seasonal Pick'
+  ).slice(0, 4);
+
   return (
-    <div className="space-y-20 pb-20">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-radial from-[#244b37] via-[#1c382b] to-[#14281f] text-[#fbf9f4] py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-b border-[#264a39]">
-        {/* Subtle decorative leaf pattern background */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#8aa18e_1px,transparent_1px)] [background-size:20px_20px]" />
+    <div className="space-y-16 sm:space-y-24 pb-24">
+      {/* ========================================================= */}
+      {/* 1. HERO SECTION WITH LEFT CATEGORY SIDEBAR & SHOWCASE     */}
+      {/* (Faithful remake of the reference layout in the video)    */}
+      {/* ========================================================= */}
+      <section className="relative overflow-hidden bg-radial from-[#1e3d2f] via-[#162f23] to-[#0f1f17] text-[#fbf9f4] pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-[#244b37]">
+        {/* Subtle decorative grid/leaf pattern */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#8aa18e_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
 
-        <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Text */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#264a39] border border-[#335d48] text-xs font-semibold text-[#c9d6cb]">
-              <span className="w-2 h-2 rounded-full bg-[#8aa18e] animate-ping" />
-              <span>The Village-to-City Bridge &bull; Rural Farms to Metro Doorsteps</span>
-            </div>
-
-            <h1 className="font-serif font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white">
-              Pure Village Harvests,
-              <span className="block text-[#f5a894] font-normal text-2xl sm:text-3xl mt-2 italic font-serif">
-                Delivered Directly to City Tables.
-              </span>
-            </h1>
-
-            <p className="text-sm sm:text-base text-[#c9d6cb] leading-relaxed max-w-xl">
-              Authentic village foods have historically stayed confined to remote hamlets, while city families were left with mass-processed supermarket substitutes. Root &amp; River creates the direct bridge: hand-harvested produce, wood-pressed oils, mountain turmeric, and sacred herbs transported safely from rural gardens straight into your city home.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCategoryFilter('all');
-                  setActivePage('shop');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="px-7 py-3.5 rounded-xl bg-[#bf563b] hover:bg-[#a7452d] text-white font-serif font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center gap-2 cursor-pointer"
-              >
-                <span>Browse Seasonal Harvest</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setActivePage('story');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-[#fbf9f4] font-semibold text-sm border border-white/20 backdrop-blur-xs transition-all cursor-pointer"
-              >
-                How We Reach Cities
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsAiAssistantOpen(true)}
-                className="px-4 py-3.5 rounded-xl bg-[#264a39] hover:bg-[#335d48] text-[#eef3ef] text-xs font-semibold border border-[#335d48] flex items-center gap-2 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-[#bf563b]" />
-                <span>City Kitchen Advisor</span>
-              </button>
-            </div>
-
-            {/* Trust Chips */}
-            <div className="pt-6 border-t border-[#264a39] grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs text-[#c9d6cb]">
-              <div className="flex items-center gap-2">
-                <Truck className="w-4 h-4 text-[#8aa18e] shrink-0" />
-                <span>24-72h Direct Metro Delivery</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-[#8aa18e] shrink-0" />
-                <span>Servicing 28+ Major Indian Cities</span>
-              </div>
-              <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
-                <Globe className="w-4 h-4 text-[#8aa18e] shrink-0" />
-                <span>Diaspora &amp; Global Inquiries</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Featured Card Showcase */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-sm rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-white/10 backdrop-blur-md p-4">
-              <div className="relative rounded-2xl overflow-hidden aspect-4/3">
-                <img
-                  src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80"
-                  alt="Lakadong Turmeric Harvest"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 left-3 bg-[#bf563b] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                  Harvest of the Month
-                </div>
-              </div>
-
-              <div className="p-4 space-y-3 text-white">
-                <div className="flex items-center justify-between text-xs text-[#c9d6cb]">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#8aa18e]" />
-                    West Jaintia Hills, Meghalaya
-                  </span>
-                  <span>7.2% Curcumin Sample</span>
-                </div>
-
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* Left Column: Floating Category Sidebar (Matches reference video) */}
+            <div className="hidden lg:block lg:col-span-3">
+              <div className="bg-[#fffdfa] rounded-2xl shadow-xl border border-[#e4dcce] overflow-hidden text-[#1c382b] h-full flex flex-col justify-between">
                 <div>
-                  <h3 className="font-serif font-bold text-lg leading-tight">
-                    Single-Origin Lakadong Turmeric Powder
-                  </h3>
-                  <p className="text-xs text-[#c9d6cb] mt-1 line-clamp-2">
-                    Cultivated by Bah Kyrshan Dhar on mountain loam, sun-cured on clean bamboo mats and slow stone-milled.
+                  <div className="px-5 py-4 bg-[#1c382b] text-white flex items-center justify-between">
+                    <span className="font-serif font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                      <Leaf className="w-4 h-4 text-[#8aa18e]" />
+                      <span>Village Categories</span>
+                    </span>
+                    <span className="text-[10px] font-mono bg-[#264a39] px-2 py-0.5 rounded-full text-[#c9d6cb]">
+                      {products.length} Items
+                    </span>
+                  </div>
+
+                  <div className="divide-y divide-[#f0ece3]">
+                    {CATEGORIES.map((cat) => {
+                      const count = getCategoryCount(cat.id);
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => handleCategoryClick(cat.id)}
+                          className="w-full flex items-center justify-between px-4 py-3 text-xs hover:bg-[#f6f1e7] transition-all cursor-pointer text-left group"
+                        >
+                          <span className="flex items-center gap-2.5 font-medium group-hover:text-[#bf563b] transition-colors">
+                            <span className="text-base group-hover:scale-110 transition-transform">{cat.icon}</span>
+                            <span className="line-clamp-1">{cat.label}</span>
+                          </span>
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#eef3ef] text-[#59735d] group-hover:bg-[#1c382b] group-hover:text-white transition-colors">
+                            {String(count).padStart(2, '0')}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Bottom Trust Badge inside Left Menu */}
+                <div className="p-3.5 m-3 rounded-xl bg-[#eef3ef] border border-[#c9d6cb] text-[11px] text-[#243028] space-y-1.5">
+                  <div className="flex items-center gap-1.5 font-bold text-[#1c382b]">
+                    <ShieldCheck className="w-4 h-4 text-[#2e6844]" />
+                    <span>Single-Origin Promise</span>
+                  </div>
+                  <p className="text-[10px] text-[#526f58] leading-tight">
+                    Direct from village smallholders with complete harvest &amp; packing transparency.
                   </p>
                 </div>
+              </div>
+            </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                  <span className="font-serif font-bold text-xl text-white">
-                    ₹320 <span className="text-xs font-normal text-[#c9d6cb]">/ 250g pack</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => openProductDetails('prod-turmeric-lakadong')}
-                    className="px-4 py-2 bg-white text-[#1c382b] font-serif font-bold text-xs rounded-xl hover:bg-[#ece3d3] transition-all cursor-pointer"
-                  >
-                    View Harvest Details
-                  </button>
+            {/* Main Center & Right: High-Impact Hero Showcase */}
+            <div className="lg:col-span-9 bg-linear-to-br from-[#244b37] to-[#14281f] rounded-3xl p-8 sm:p-12 border border-[#335d48] relative overflow-hidden flex flex-col justify-between shadow-2xl">
+              {/* Decorative radial blur in top right */}
+              <div className="absolute -top-24 -right-24 w-80 h-80 bg-[#bf563b]/15 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
+                {/* Left Text Content */}
+                <div className="md:col-span-7 space-y-5">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c382b] border border-[#38644e] text-xs font-semibold text-[#c9d6cb]">
+                    <span className="w-2 h-2 rounded-full bg-[#8aa18e] animate-ping" />
+                    <span>Pure Organics From Our Village Farms</span>
+                  </div>
+
+                  <h1 className="font-serif font-extrabold text-3xl sm:text-5xl lg:text-5xl tracking-tight leading-[1.15] text-white">
+                    Rooted in Tradition,
+                    <span className="block text-[#f5a894] font-normal text-2xl sm:text-3xl lg:text-4xl mt-2 italic font-serif">
+                      Grown with Purity.
+                    </span>
+                  </h1>
+
+                  <p className="text-xs sm:text-sm text-[#c9d6cb] leading-relaxed max-w-lg">
+                    Authentic village superfoods have stayed hidden in rural hamlets for generations. 
+                    <strong className="text-white"> Root &amp; River builds the direct bridge:</strong> single-origin Lakadong turmeric, wooden-churned cold-pressed oils, wild forest honey, and fragrant unpolished grains, dispatched straight from farm collection sheds to conscious city kitchens and global homes.
+                  </p>
+
+                  {/* CTA Buttons */}
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategoryFilter('all');
+                        setActivePage('shop');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-6 py-3.5 rounded-xl bg-[#bf563b] hover:bg-[#a7452d] text-white font-serif font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                    >
+                      <span>SHOP NOW</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActivePage('story');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-[#fbf9f4] font-semibold text-xs border border-white/20 backdrop-blur-xs transition-all cursor-pointer"
+                    >
+                      Our Village Story
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsAiAssistantOpen(true)}
+                      className="px-4 py-3.5 rounded-xl bg-[#1c382b] hover:bg-[#264a39] text-[#eef3ef] text-xs font-semibold border border-[#335d48] flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-[#f5a894]" />
+                      <span>AI Sourcing Advisor</span>
+                    </button>
+                  </div>
+
+                  {/* Trust Micro-Row */}
+                  <div className="pt-4 border-t border-[#335d48] flex flex-wrap items-center gap-4 text-[11px] text-[#c9d6cb]">
+                    <span className="flex items-center gap-1.5">
+                      <Truck className="w-3.5 h-3.5 text-[#8aa18e]" />
+                      <span>24-72h Direct Metro Delivery</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#8aa18e]" />
+                      <span>Non-GMO, Chemical-Free Heritage</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Globe className="w-3.5 h-3.5 text-[#8aa18e]" />
+                      <span>Serving 40+ Overseas Countries</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right Hero Visual Card with Floating Elements */}
+                <div className="md:col-span-5 relative flex justify-center items-center">
+                  <div className="relative w-full max-w-xs animate-float">
+                    {/* Glowing background ring */}
+                    <div className="absolute inset-0 bg-[#bf563b]/20 rounded-3xl blur-2xl transform -rotate-6 scale-95" />
+
+                    {/* Main Image Card */}
+                    <div className="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-white/20 bg-white/10 backdrop-blur-md p-3">
+                      <div className="relative rounded-2xl overflow-hidden aspect-4/5">
+                        <img
+                          src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80"
+                          alt="Pure Village Lakadong Turmeric"
+                          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/20" />
+
+                        {/* Top tag */}
+                        <div className="absolute top-3 left-3 bg-[#bf563b] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1">
+                          <Flame className="w-3 h-3" />
+                          <span>100% Traditional Harvest</span>
+                        </div>
+
+                        {/* Bottom product caption */}
+                        <div className="absolute bottom-3 left-3 right-3 text-white space-y-1">
+                          <span className="text-[10px] text-[#c9d6cb] uppercase font-bold tracking-wider block">
+                            West Jaintia Hills, Meghalaya
+                          </span>
+                          <h4 className="font-serif font-bold text-sm leading-tight text-white">
+                            Single-Origin Lakadong Turmeric Powder
+                          </h4>
+                          <div className="flex items-center justify-between pt-1 border-t border-white/20">
+                            <span className="font-serif font-bold text-base text-[#f5a894]">
+                              {formatPrice(320)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => openProductDetails('prod-turmeric-lakadong')}
+                              className="px-2.5 py-1 bg-white text-[#1c382b] font-bold text-[10px] rounded-lg hover:bg-[#ece3d3] transition-colors cursor-pointer"
+                            >
+                              View Harvest
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Floating pill: Pure Stone-Milled */}
+                    <div className="absolute -top-3 -right-3 bg-white text-[#1c382b] rounded-xl px-3 py-1.5 shadow-xl border border-[#e4dcce] flex items-center gap-1.5 text-xs font-bold animate-float-delayed">
+                      <Sprout className="w-4 h-4 text-[#2e6844]" />
+                      <span>Stone-Milled &amp; Raw</span>
+                    </div>
+
+                    {/* Floating pill: Fast City Delivery */}
+                    <div className="absolute -bottom-4 -left-3 bg-[#1c382b] text-white rounded-xl px-3 py-1.5 shadow-xl border border-[#335d48] flex items-center gap-1.5 text-xs font-semibold">
+                      <Truck className="w-4 h-4 text-[#8aa18e]" />
+                      <span>Direct Farm Dispatch</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -184,64 +286,460 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* The Village-to-City Bridge Section */}
+      {/* ========================================================= */}
+      {/* 2. 3 FEATURE PILLARS STRIP (Exact match to video reference) */}
+      {/* ========================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Pillar 1 */}
+          <div className="p-6 rounded-2xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] hover:shadow-lg transition-all duration-300 space-y-3 group cursor-pointer">
+            <div className="w-12 h-12 rounded-2xl bg-[#eef3ef] text-[#1c382b] flex items-center justify-center group-hover:scale-110 group-hover:bg-[#1c382b] group-hover:text-white transition-all">
+              <Sprout className="w-6 h-6 text-[#2e6844] group-hover:text-[#8aa18e]" />
+            </div>
+            <h3 className="font-serif font-bold text-lg text-[#1c382b]">
+              Pure. Traditional. Organic.
+            </h3>
+            <p className="text-xs text-[#526f58] leading-relaxed">
+              Cultivated using ancestral natural farming methods without synthetic pesticides, chemical sprays, or artificial ripening agents.
+            </p>
+          </div>
+
+          {/* Pillar 2 */}
+          <div className="p-6 rounded-2xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] hover:shadow-lg transition-all duration-300 space-y-3 group cursor-pointer">
+            <div className="w-12 h-12 rounded-2xl bg-[#faeee9] text-[#bf563b] flex items-center justify-center group-hover:scale-110 group-hover:bg-[#bf563b] group-hover:text-white transition-all">
+              <HeartPulse className="w-6 h-6 text-[#bf563b] group-hover:text-white" />
+            </div>
+            <h3 className="font-serif font-bold text-lg text-[#1c382b]">
+              Wellness Rooted in Tradition
+            </h3>
+            <p className="text-xs text-[#526f58] leading-relaxed">
+              Living nutrients preserved through slow stone-milling, wooden cold-pressing (&lt;38°C), and unpasteurized raw forest harvesting.
+            </p>
+          </div>
+
+          {/* Pillar 3 */}
+          <div className="p-6 rounded-2xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] hover:shadow-lg transition-all duration-300 space-y-3 group cursor-pointer">
+            <div className="w-12 h-12 rounded-2xl bg-[#eef3ef] text-[#1c382b] flex items-center justify-center group-hover:scale-110 group-hover:bg-[#1c382b] group-hover:text-white transition-all">
+              <Building2 className="w-6 h-6 text-[#2e6844] group-hover:text-[#8aa18e]" />
+            </div>
+            <h3 className="font-serif font-bold text-lg text-[#1c382b]">
+              From Our Farm to Your Home
+            </h3>
+            <p className="text-xs text-[#526f58] leading-relaxed">
+              Direct aggregation bridging remote village growers to city apartments across India and international doorsteps worldwide.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* 3. CATEGORY SHOWCASE: "From the land to your home"         */}
+      {/* (Row 1: 3 Pastel Banner Cards | Row 2: 6 Roundel Tiles)   */}
+      {/* ========================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
+            Hand-Tended Harvest Collections
+          </span>
+          <h2 className="font-serif font-bold text-3xl sm:text-4xl text-[#1c382b]">
+            From the land to your home
+          </h2>
+          <p className="text-xs sm:text-sm text-[#526f58]">
+            Explore authentic staples categorized by traditional Indian craft and village origin.
+          </p>
+        </div>
+
+        {/* Row 1: 3 Wide Pastel Promotional Cards (Direct match to video) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Card 1: Warm Amber / Oils */}
+          <div 
+            onClick={() => handleCategoryClick('oils')}
+            className="group relative rounded-3xl p-6 sm:p-8 bg-[#fbf2e0] border border-[#ebdcc2] overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[220px]"
+          >
+            <div className="relative z-10 max-w-[65%] space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#966b26] bg-[#f2e2be] px-2.5 py-0.5 rounded-full inline-block">
+                Wooden Chekku Pressed
+              </span>
+              <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#3b2b10] leading-tight">
+                Cold-Pressed Oils &amp; Ghee
+              </h3>
+              <p className="text-xs text-[#6e5323] leading-relaxed line-clamp-2">
+                Traditional Vaagai wood-pressed oils and A2 Gir cow bilona churned ghee.
+              </p>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#3b2b10] pt-2 group-hover:text-[#bf563b] transition-colors">
+                <span>Shop Collection</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+
+            {/* Floating Image on Right */}
+            <div className="absolute -right-4 -bottom-4 w-36 sm:w-44 h-36 sm:h-44 rounded-2xl overflow-hidden shadow-lg border-4 border-white/80 transform group-hover:scale-108 group-hover:-rotate-2 transition-transform duration-500">
+              <img
+                src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80"
+                alt="Cold Pressed Oil"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Card 2: Wheat Cream / Honey */}
+          <div 
+            onClick={() => handleCategoryClick('honey')}
+            className="group relative rounded-3xl p-6 sm:p-8 bg-[#f5ede1] border border-[#e6dbc8] overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[220px]"
+          >
+            <div className="relative z-10 max-w-[65%] space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#825c34] bg-[#ebd8be] px-2.5 py-0.5 rounded-full inline-block">
+                Forest Wild Foraged
+              </span>
+              <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#332213] leading-tight">
+                Raw Forest Honey &amp; Sweeteners
+              </h3>
+              <p className="text-xs text-[#664b32] leading-relaxed line-clamp-2">
+                Unpasteurized tribal multi-flora nectar and organic liquid jaggery.
+              </p>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#332213] pt-2 group-hover:text-[#bf563b] transition-colors">
+                <span>Shop Collection</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+
+            {/* Floating Image on Right */}
+            <div className="absolute -right-4 -bottom-4 w-36 sm:w-44 h-36 sm:h-44 rounded-2xl overflow-hidden shadow-lg border-4 border-white/80 transform group-hover:scale-108 group-hover:-rotate-2 transition-transform duration-500">
+              <img
+                src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80"
+                alt="Raw Wild Honey"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Card 3: Sage Seafoam Mint / Spices & Turmeric */}
+          <div 
+            onClick={() => handleCategoryClick('spices')}
+            className="group relative rounded-3xl p-6 sm:p-8 bg-[#dbeae3] border border-[#c3ded2] overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[220px]"
+          >
+            <div className="relative z-10 max-w-[65%] space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#265e49] bg-[#c3ded2] px-2.5 py-0.5 rounded-full inline-block">
+                Single-Origin Mountains
+              </span>
+              <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#143d2f] leading-tight">
+                Lakadong Turmeric &amp; Spices
+              </h3>
+              <p className="text-xs text-[#2b5947] leading-relaxed line-clamp-2">
+                High-curcumin mountain rhizomes and sun-dried Tellicherry black peppercorns.
+              </p>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#143d2f] pt-2 group-hover:text-[#bf563b] transition-colors">
+                <span>Shop Collection</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+
+            {/* Floating Image on Right */}
+            <div className="absolute -right-4 -bottom-4 w-36 sm:w-44 h-36 sm:h-44 rounded-2xl overflow-hidden shadow-lg border-4 border-white/80 transform group-hover:scale-108 group-hover:-rotate-2 transition-transform duration-500">
+              <img
+                src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80"
+                alt="Single-Origin Turmeric"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Row 2: 6 Roundel Category Tiles with Lift Animations */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          {CATEGORIES.filter(c => c.id !== 'all').map((cat) => {
+            const count = getCategoryCount(cat.id);
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => handleCategoryClick(cat.id)}
+                className="p-5 rounded-2xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#1c382b] hover:shadow-lg hover:-translate-y-1 transition-all text-center space-y-2.5 group cursor-pointer"
+              >
+                <div className="w-16 h-16 mx-auto rounded-full bg-[#f6f1e7] flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-[#1c382b] transition-all">
+                  <span>{cat.icon}</span>
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-xs sm:text-sm text-[#1c382b] block leading-snug group-hover:text-[#bf563b] transition-colors">
+                    {cat.label}
+                  </h4>
+                  <span className="text-[11px] font-mono text-[#8aa18e] mt-0.5 block">
+                    {count} Products
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* 4. "OUR PRODUCTS" WITH SIDEBAR (Split layout from video)   */}
+      {/* ========================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column Sidebar (Banner + Category Filter Checklist) */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Promo Banner Card in Sidebar */}
+            <div className="rounded-2xl overflow-hidden bg-radial from-[#1e3d2f] to-[#14281f] text-white p-6 relative border border-[#2d5641] space-y-4 shadow-lg">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#f5a894] bg-[#bf563b]/30 px-2 py-0.5 rounded-full inline-block">
+                Farm-Direct Guarantee
+              </span>
+              <h3 className="font-serif font-bold text-xl text-white leading-tight">
+                Wellness Rooted in Tradition
+              </h3>
+              <p className="text-xs text-[#c9d6cb] leading-relaxed">
+                Every purchase directly finances smallholder farm cooperatives across Meghalaya, Wayanad, Bastar, and Kangra.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategoryFilter('all');
+                  setActivePage('shop');
+                }}
+                className="w-full py-2.5 rounded-xl bg-[#bf563b] hover:bg-[#a7452d] text-white text-xs font-serif font-bold transition-colors cursor-pointer text-center"
+              >
+                Browse All Harvest &rarr;
+              </button>
+            </div>
+
+            {/* Category Filter Widget */}
+            <div className="p-5 rounded-2xl bg-[#fffdfa] border border-[#e4dcce] space-y-3">
+              <span className="font-serif font-bold text-xs text-[#1c382b] uppercase tracking-wider block border-b border-[#f0ece3] pb-2">
+                Filter by Category
+              </span>
+              <div className="space-y-1.5">
+                {CATEGORIES.map((cat) => {
+                  const count = getCategoryCount(cat.id);
+                  const isSelected = activeCatalogTab === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setActiveCatalogTab(cat.id)}
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer text-left ${
+                        isSelected 
+                          ? 'bg-[#1c382b] text-white font-bold' 
+                          : 'text-[#1c382b] hover:bg-[#f6f1e7]'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>{cat.icon}</span>
+                        <span className="line-clamp-1">{cat.label}</span>
+                      </span>
+                      <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                        isSelected ? 'bg-[#264a39] text-[#eef3ef]' : 'bg-[#eef3ef] text-[#59735d]'
+                      }`}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Village Cluster Origin Badges */}
+            <div className="p-5 rounded-2xl bg-[#eef3ef] border border-[#c9d6cb] text-xs space-y-2">
+              <span className="font-bold text-[#1c382b] block uppercase tracking-wider text-[10px]">
+                Active Harvest Regions
+              </span>
+              <div className="flex flex-wrap gap-1.5 text-[11px] text-[#243028]">
+                <span className="bg-white px-2.5 py-1 rounded-md border border-[#c9d6cb]">Shangpung, Meghalaya</span>
+                <span className="bg-white px-2.5 py-1 rounded-md border border-[#c9d6cb]">Wayanad, Kerala</span>
+                <span className="bg-white px-2.5 py-1 rounded-md border border-[#c9d6cb]">Bastar, Chhattisgarh</span>
+                <span className="bg-white px-2.5 py-1 rounded-md border border-[#c9d6cb]">Kangra Valley, HP</span>
+                <span className="bg-white px-2.5 py-1 rounded-md border border-[#c9d6cb]">Burdwan, West Bengal</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Catalog Grid */}
+          <div className="lg:col-span-9 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#e4dcce] pb-4">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
+                  Authentic Rural Harvest
+                </span>
+                <h3 className="font-serif font-bold text-2xl sm:text-3xl text-[#1c382b]">
+                  Our Village Products
+                </h3>
+              </div>
+
+              {/* Category Quick Filter Pills */}
+              <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1">
+                {CATEGORIES.slice(0, 5).map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setActiveCatalogTab(cat.id)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                      activeCatalogTab === cat.id
+                        ? 'bg-[#1c382b] text-white shadow-xs'
+                        : 'bg-[#fffdfa] text-[#526f58] border border-[#e4dcce] hover:border-[#1c382b]'
+                    }`}
+                  >
+                    {cat.label.split('&')[0]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Product Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              {displayedProducts.map((prod) => (
+                <ProductCard key={prod.id} product={prod} />
+              ))}
+            </div>
+
+            {/* View All Button */}
+            <div className="text-center pt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategoryFilter(activeCatalogTab);
+                  setActivePage('shop');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#1c382b] hover:bg-[#284c3b] text-white font-serif font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer"
+              >
+                <span>View All Products in Catalog ({products.length})</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* 5. STATS COUNTER RIBBON (Direct match to reference video) */}
+      {/* ========================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl bg-[#1c382b] text-white p-8 sm:p-12 border border-[#2d5641] shadow-xl relative overflow-hidden">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-white/10">
+            <div className="space-y-1 pt-4 sm:pt-0">
+              <span className="font-serif font-extrabold text-4xl sm:text-5xl text-[#f5a894] block">
+                150+
+              </span>
+              <span className="font-bold text-sm text-white block">Partner Farmers</span>
+              <span className="text-[11px] text-[#c9d6cb]">Sustaining traditional heirloom cultivation</span>
+            </div>
+
+            <div className="space-y-1 pt-4 sm:pt-0">
+              <span className="font-serif font-extrabold text-4xl sm:text-5xl text-[#8aa18e] block">
+                18+
+              </span>
+              <span className="font-bold text-sm text-white block">Village Clusters</span>
+              <span className="text-[11px] text-[#c9d6cb]">Direct collection sheds in remote hamlets</span>
+            </div>
+
+            <div className="space-y-1 pt-4 sm:pt-0">
+              <span className="font-serif font-extrabold text-4xl sm:text-5xl text-[#f5a894] block">
+                1,000+
+              </span>
+              <span className="font-bold text-sm text-white block">Happy City Families</span>
+              <span className="text-[11px] text-[#c9d6cb]">Healthy tables across 28+ metro cities</span>
+            </div>
+
+            <div className="space-y-1 pt-4 sm:pt-0">
+              <span className="font-serif font-extrabold text-4xl sm:text-5xl text-[#8aa18e] block">
+                100%
+              </span>
+              <span className="font-bold text-sm text-white block">Fair Farm Pay</span>
+              <span className="text-[11px] text-[#c9d6cb]">Zero middlemen exploitation or mandi cuts</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* 6. TWO WIDE PROMOTIONAL BANNERS (From reference video)    */}
+      {/* ========================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Banner 1: Empowering Farmers / Coupon code VILLAGE10 */}
+          <div className="rounded-3xl p-8 sm:p-10 bg-radial from-[#bf563b] to-[#8f3621] text-white relative overflow-hidden flex flex-col justify-between space-y-6 shadow-xl">
+            <div className="space-y-3 relative z-10">
+              <span className="text-[11px] font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full inline-block backdrop-blur-xs">
+                Empowering Farmers, Enriching Lives
+              </span>
+              <h3 className="font-serif font-bold text-2xl sm:text-3xl text-white leading-tight">
+                78% Direct Fair Return to Village Growers
+              </h3>
+              <p className="text-xs sm:text-sm text-white/90 leading-relaxed max-w-md">
+                Every Rupee spent with Root &amp; River bypasses multi-tier mandi brokers and wholesale speculators, keeping ancient seeds and pure soil alive for future generations.
+              </p>
+            </div>
+
+            {/* Interactive Coupon Box */}
+            <div className="relative z-10 pt-2 flex flex-col sm:flex-row items-center gap-3">
+              <div 
+                onClick={handleCopyCoupon}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#1c382b] font-mono font-bold text-xs shadow-md cursor-pointer hover:bg-[#f6f1e7] transition-colors"
+                title="Click to copy coupon code"
+              >
+                <Tag className="w-4 h-4 text-[#bf563b]" />
+                <span>CODE: VILLAGE10</span>
+                {copiedCoupon ? (
+                  <Check className="w-3.5 h-3.5 text-green-600 ml-1" />
+                ) : (
+                  <span className="text-[10px] text-[#8aa18e] ml-1">(Click to copy)</span>
+                )}
+              </div>
+
+              <span className="text-xs text-white/90 font-medium">
+                Flat ₹100 off your first city kitchen order over ₹799
+              </span>
+            </div>
+          </div>
+
+          {/* Banner 2: Rooted in Tradition, Grown with Care */}
+          <div className="rounded-3xl p-8 sm:p-10 bg-radial from-[#244b37] to-[#14281f] text-white relative overflow-hidden flex flex-col justify-between space-y-6 shadow-xl border border-[#335d48]">
+            <div className="space-y-3 relative z-10">
+              <span className="text-[11px] font-bold uppercase tracking-wider bg-[#8aa18e]/20 text-[#c9d6cb] px-3 py-1 rounded-full inline-block border border-[#8aa18e]/30">
+                Ethical Sourcing Protocol
+              </span>
+              <h3 className="font-serif font-bold text-2xl sm:text-3xl text-white leading-tight">
+                Rooted in Tradition, Grown with Care
+              </h3>
+              <p className="text-xs sm:text-sm text-[#c9d6cb] leading-relaxed max-w-md">
+                We test every batch for heavy metals, moisture, and natural active compounds like curcumin and volatile polyphenols before dispatch.
+              </p>
+            </div>
+
+            <div className="relative z-10 pt-2 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setActivePage('story');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="px-6 py-3 rounded-xl bg-white text-[#1c382b] font-serif font-bold text-xs uppercase tracking-wider hover:bg-[#ece3d3] transition-colors cursor-pointer"
+              >
+                Read Sourcing Standards &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* 7. THE VILLAGE-TO-CITY BRIDGE & COMPARISON TABLE          */}
+      {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="rounded-3xl bg-radial from-[#1e3d2f] to-[#14281f] text-white p-8 sm:p-12 border border-[#264a39] space-y-8 relative overflow-hidden">
-          {/* Subtle background glow */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#bf563b]/10 rounded-full blur-3xl pointer-events-none" />
-
           <div className="max-w-3xl space-y-3 relative z-10">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#bf563b]/20 text-[#f5a894] border border-[#bf563b]/40 text-xs font-semibold uppercase tracking-wider">
               <Building2 className="w-3.5 h-3.5" />
-              <span>The Great Disconnect Solved</span>
+              <span>The Great Urban Disconnect Solved</span>
             </span>
             <h2 className="font-serif font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">
               Why Pure Village Food Never Reached City People — Until Now
             </h2>
             <p className="text-xs sm:text-sm text-[#c9d6cb] leading-relaxed">
-              Village farmers cultivate the most nutrient-dense, chemical-free food on earth, but without cold chains, fair aggregation, or digital access, their harvests historically stayed within rural weekly haats. Meanwhile, families living in busy cities and people abroad were trapped buying mass-manufactured, chemically preserved supermarket foods.
+              Village farmers cultivate the most nutrient-dense food on earth, but without cold chains, aggregation sheds, or digital access, harvests stayed locked inside rural weekly haats. Meanwhile, families living in busy metro apartments and people abroad were forced to consume mass-manufactured, chemically refined supermarket foods.
               <br /><br />
               <strong className="text-white">Root &amp; River creates the direct pipeline:</strong> We collect fresh harvests straight at village collection sheds and rush them via temperature-stable eco-parcels to your urban apartment door in 24 to 72 hours.
             </p>
-          </div>
-
-          {/* 3 Pillar Infographic Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 pt-2">
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#264a39] flex items-center justify-center text-2xl">
-                🏡
-              </div>
-              <h3 className="font-serif font-bold text-lg text-white">
-                1. Sourced from Isolated Hamlets
-              </h3>
-              <p className="text-xs text-[#c9d6cb] leading-relaxed">
-                We work directly with tribal cooperatives in Bastar, smallholders in Jaintia Hills, and orchard stewards in Wayanad who are physically disconnected from city markets.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#264a39] flex items-center justify-center text-2xl">
-                🏙️
-              </div>
-              <h3 className="font-serif font-bold text-lg text-white">
-                2. Direct to 28+ Metro Cities
-              </h3>
-              <p className="text-xs text-[#c9d6cb] leading-relaxed">
-                Whether you reside in Mumbai, Delhi NCR, Bengaluru, Hyderabad, Pune, Chennai, or Kolkata, your order arrives fresh without sitting in wholesale mandi warehouses for weeks.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#264a39] flex items-center justify-center text-2xl">
-                🌍
-              </div>
-              <h3 className="font-serif font-bold text-lg text-white">
-                3. Built for Conscious People Everywhere
-              </h3>
-              <p className="text-xs text-[#c9d6cb] leading-relaxed">
-                Even foreign travelers and global diaspora who crave honest Indian heritage superfoods can trace every gram to the specific village soil where it was grown.
-              </p>
-            </div>
           </div>
 
           {/* Eye-Opening Comparison Table: Supermarket vs Village Direct */}
@@ -305,7 +803,7 @@ export const HomePage: React.FC = () => {
                   setSelectedCategoryFilter('all');
                   setActivePage('shop');
                 }}
-                className="font-bold text-[#1c382b] hover:text-[#bf563b] flex items-center gap-1"
+                className="font-bold text-[#1c382b] hover:text-[#bf563b] flex items-center gap-1 cursor-pointer"
               >
                 <span>Switch to Village Harvests Today</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -315,7 +813,9 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Sourcing Journey: How products are sourced, grown, packed, and delivered */}
+      {/* ========================================================= */}
+      {/* 8. SOURCING JOURNEY: Sourced, Grown, Packed & Delivered   */}
+      {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
@@ -355,153 +855,9 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Category Explorer Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-1">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
-              Curated Rural Produce
-            </span>
-            <h2 className="font-serif font-bold text-3xl text-[#1c382b]">
-              Explore by Village Category
-            </h2>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedCategoryFilter('all');
-              setActivePage('shop');
-            }}
-            className="text-xs font-semibold text-[#1c382b] hover:text-[#bf563b] flex items-center gap-1 cursor-pointer"
-          >
-            <span>View All Products in Catalog</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {CATEGORIES.filter(c => c.id !== 'all').map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => handleCategoryClick(cat.id)}
-              className="p-4 rounded-2xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#1c382b] hover:bg-[#f6f1e7] transition-all text-center space-y-2 group shadow-xs cursor-pointer"
-            >
-              <div className="text-3xl group-hover:scale-110 transition-transform">
-                {cat.icon}
-              </div>
-              <span className="font-serif font-bold text-xs sm:text-sm text-[#1c382b] block leading-snug">
-                {cat.label}
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* Seasonal Selections Spotlight */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-1">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
-              Limited Small-Batch Picking
-            </span>
-            <h2 className="font-serif font-bold text-3xl text-[#1c382b]">
-              Seasonal Selections
-            </h2>
-            <p className="text-xs text-[#526f58]">
-              Harvested at peak freshness from current crop cycles in partner villages.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedCategoryFilter('all');
-              setActivePage('shop');
-            }}
-            className="text-xs font-semibold text-[#1c382b] hover:text-[#bf563b] flex items-center gap-1 cursor-pointer"
-          >
-            <span>Explore All Seasonal Items</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {seasonalSelections.slice(0, 3).map((prod) => (
-            <ProductCard key={prod.id} product={prod} />
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Products Shelf */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-1">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
-              Everyday Country Essentials
-            </span>
-            <h2 className="font-serif font-bold text-3xl text-[#1c382b]">
-              Featured Pantry &amp; Farm Staples
-            </h2>
-            <p className="text-xs text-[#526f58]">
-              Cold-pressed oils, sacred herbs, raw honey, and fragrant heirloom grains.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedCategoryFilter('all');
-              setActivePage('shop');
-            }}
-            className="text-xs font-semibold text-[#1c382b] hover:text-[#bf563b] flex items-center gap-1 cursor-pointer"
-          >
-            <span>Browse Full Catalog</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProducts.slice(0, 6).map((prod) => (
-            <ProductCard key={prod.id} product={prod} />
-          ))}
-        </div>
-      </section>
-
-      {/* Trust & Transparency Feature Card */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-[#eef3ef] border border-[#c9d6cb] p-8 sm:p-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-[#1c382b]">
-          <div className="space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-[#1c382b] text-white flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-[#8aa18e]" />
-            </div>
-            <h3 className="font-serif font-bold text-lg">Single-Origin Villages</h3>
-            <p className="text-xs text-[#526f58] leading-relaxed">
-              Every jar, sack, and pouch lists the grower clan, exact taluka, and soil type. No mixed bulk aggregation from anonymous markets.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-[#1c382b] text-white flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-[#8aa18e]" />
-            </div>
-            <h3 className="font-serif font-bold text-lg">Harvest &amp; Packing Dates</h3>
-            <p className="text-xs text-[#526f58] leading-relaxed">
-              Transparent batch lot numbers reveal when rhizomes were dug, coconuts were pressed, and rice was aged in traditional granaries.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-[#1c382b] text-white flex items-center justify-center">
-              <Truck className="w-5 h-5 text-[#8aa18e]" />
-            </div>
-            <h3 className="font-serif font-bold text-lg">Direct Rural Logistics</h3>
-            <p className="text-xs text-[#526f58] leading-relaxed">
-              Standard 2-5 day delivery windows with dispatch directly from village aggregation sheds to preserve living natural freshness.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Meet the Growers / Farmer Stories */}
+      {/* ========================================================= */}
+      {/* 9. MEET THE VILLAGE GROWERS (Farmer Stories)              */}
+      {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
@@ -561,111 +917,9 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* City Kitchen Voices & Urban Families */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b]">
-            Reaching Modern Homes Everywhere
-          </span>
-          <h2 className="font-serif font-bold text-3xl sm:text-4xl text-[#1c382b]">
-            City Kitchen Stories
-          </h2>
-          <p className="text-xs sm:text-sm text-[#526f58]">
-            See how urban households across India are replacing adulterated supermarket products with pure village harvests.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-3xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] transition-all space-y-4 shadow-xs flex flex-col justify-between">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#526f58]">
-                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
-                  <Building2 className="w-3.5 h-3.5 text-[#59735d]" />
-                  Bengaluru, Karnataka
-                </span>
-                <span className="text-[#bf563b] font-medium">Verified City Resident</span>
-              </div>
-              <p className="text-xs text-[#243028] leading-relaxed italic">
-                &ldquo;In a high-paced city like Bengaluru, getting authentic cold-pressed coconut oil and high-curcumin Lakadong turmeric was impossible. Supermarket products are chemically bleached. Root &amp; River brought true village purity right into our apartment.&rdquo;
-              </p>
-            </div>
-            <div className="pt-3 border-t border-[#f0ece3] flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#1c382b] text-white flex items-center justify-center font-bold text-xs">
-                M
-              </div>
-              <div>
-                <span className="font-serif font-bold text-xs text-[#1c382b] block">Meera &amp; Anand S.</span>
-                <span className="text-[10px] text-[#526f58]">Indiranagar &bull; Regular Subscriber</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] transition-all space-y-4 shadow-xs flex flex-col justify-between">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#526f58]">
-                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
-                  <Building2 className="w-3.5 h-3.5 text-[#59735d]" />
-                  Mumbai, Maharashtra
-                </span>
-                <span className="text-[#bf563b] font-medium">Verified City Resident</span>
-              </div>
-              <p className="text-xs text-[#243028] leading-relaxed italic">
-                &ldquo;My grandmother grew up in rural Konkan and always complained that city supermarket spices have lost their aroma and soul. When the Tellicherry black pepper and A2 Bilona ghee arrived in Mumbai, she smiled and said ‘this is the true village taste of my childhood’.&rdquo;
-              </p>
-            </div>
-            <div className="pt-3 border-t border-[#f0ece3] flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#1c382b] text-white flex items-center justify-center font-bold text-xs">
-                P
-              </div>
-              <div>
-                <span className="font-serif font-bold text-xs text-[#1c382b] block">Priya &amp; Dr. Kulkarni</span>
-                <span className="text-[10px] text-[#526f58]">Worli &bull; 4 Orders Received</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-[#fffdfa] border border-[#e4dcce] hover:border-[#8aa18e] transition-all space-y-4 shadow-xs flex flex-col justify-between">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#526f58]">
-                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
-                  <Building2 className="w-3.5 h-3.5 text-[#59735d]" />
-                  Delhi NCR
-                </span>
-                <span className="text-[#bf563b] font-medium">Verified City Resident</span>
-              </div>
-              <p className="text-xs text-[#243028] leading-relaxed italic">
-                &ldquo;Living in a metro city, we needed clean food for our children without chemical preservatives or artificial food polish. The aromatic Gobindobhog rice and raw wild forest honey have completely transformed our family meals.&rdquo;
-              </p>
-            </div>
-            <div className="pt-3 border-t border-[#f0ece3] flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#1c382b] text-white flex items-center justify-center font-bold text-xs">
-                K
-              </div>
-              <div>
-                <span className="font-serif font-bold text-xs text-[#1c382b] block">Kabir &amp; Shreya Mehta</span>
-                <span className="text-[10px] text-[#526f58]">Vasant Kunj &bull; Household Staples</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Metro Reach Bar */}
-        <div className="p-4 rounded-2xl bg-[#eef3ef] border border-[#c9d6cb] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#1c382b]">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-[#1c382b] text-white">
-              <Truck className="w-4 h-4 text-[#8aa18e]" />
-            </div>
-            <span>
-              <strong>Delivering to 28+ Major Cities:</strong> Mumbai, Bengaluru, Delhi NCR, Hyderabad, Chennai, Pune, Kolkata, Ahmedabad, Jaipur, Kochi &amp; beyond.
-            </span>
-          </div>
-          <span className="text-[11px] font-semibold text-[#526f58] bg-white px-3 py-1 rounded-full border border-[#c9d6cb]">
-            Express Transit: 24 - 72 Hours
-          </span>
-        </div>
-      </section>
-
-      {/* Village Goods for Foreign Kitchens & World Travelers */}
+      {/* ========================================================= */}
+      {/* 10. GLOBAL VILLAGE GOODS & CITY KITCHEN VOICES           */}
+      {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="rounded-3xl bg-[#fffdfa] border border-[#e4dcce] p-8 sm:p-12 shadow-sm space-y-8">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-[#e4dcce] pb-6">
@@ -687,7 +941,7 @@ export const HomePage: React.FC = () => {
             <div className="p-4 rounded-2xl bg-[#f6f1e7] border border-[#e4dcce] text-xs space-y-2 lg:max-w-xs">
               <strong className="text-[#1c382b] block font-serif text-sm">International Buyer Assurance:</strong>
               <ul className="space-y-1 text-[#526f58] text-[11px] list-disc list-inside">
-                <li>Phytosanitary inspection compliant</li>
+                <li>Phytosanitary inspection compliant packaging</li>
                 <li>UV-blocking airtight metal tins &amp; amber glass</li>
                 <li>Prices switchable into USD, EUR, GBP, AED, CAD, AUD</li>
                 <li>Global Air Priority with DHL / FedEx tracking</li>
@@ -696,109 +950,70 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Foreign Testimonials / Global Voices */}
-          <div className="space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b] block">
-              Voices from Foreign Kitchens &amp; Global Diaspora
-            </span>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
-              <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-[#1c382b] flex items-center gap-1">
-                    🇬🇧 London, United Kingdom
-                  </span>
-                  <span className="text-[#bf563b] text-[10px] font-medium">Home Cook &amp; Baker</span>
-                </div>
-                <p className="text-[#526f58] leading-relaxed italic">
-                  &ldquo;Store-bought turmeric in UK supermarkets is pale and bitter. This single-origin Lakadong turmeric completely changed our curries and morning golden milk. You can genuinely smell the mountain soil of Meghalaya.&rdquo;
-                </p>
-                <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
-                  Alistair &amp; Sunita Campbell &bull; Islington, London
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+            <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                  🇬🇧 London, United Kingdom
+                </span>
+                <span className="text-[#bf563b] text-[10px] font-medium">Home Cook &amp; Baker</span>
               </div>
-
-              <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-[#1c382b] flex items-center gap-1">
-                    🇺🇸 San Francisco, California
-                  </span>
-                  <span className="text-[#bf563b] text-[10px] font-medium">Farm-to-Table Enthusiast</span>
-                </div>
-                <p className="text-[#526f58] leading-relaxed italic">
-                  &ldquo;The Tellicherry Extra Bold peppercorns cracked with a citrusy floral heat I had never experienced from commodity spice jars. Root &amp; River is doing for Indian village crops what single-origin beans did for coffee.&rdquo;
-                </p>
-                <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
-                  David Ross &bull; Hayes Valley, San Francisco
-                </div>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-[#1c382b] flex items-center gap-1">
-                    🇦🇪 Dubai, United Arab Emirates
-                  </span>
-                  <span className="text-[#bf563b] text-[10px] font-medium">Ayurvedic Wellness Cook</span>
-                </div>
-                <p className="text-[#526f58] leading-relaxed italic">
-                  &ldquo;The raw Western Ghats honey and cultured Gir cow Bilona ghee arrived in Dubai within 4 days, pristine and properly sealed. The nutty danedar ghee texture made our family halwa unforgettable.&rdquo;
-                </p>
-                <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
-                  Fatima Al-Nuaimi &bull; Jumeirah, Dubai
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Traveler Concierge: Visiting India or Shipping Abroad */}
-          <div className="p-6 rounded-2xl bg-[#eef3ef] border border-[#c9d6cb] grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <div className="space-y-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#2e6844] block">
-                Foreign Travelers Visiting India
-              </span>
-              <h3 className="font-serif font-bold text-lg text-[#1c382b]">
-                Hotel &amp; Homestay Delivery Across India
-              </h3>
-              <p className="text-xs text-[#526f58] leading-relaxed">
-                Traveling to Delhi, Mumbai, Bengaluru, Jaipur, or Kochi? We can deliver your village harvest box directly to your hotel concierge, pre-packed in travel-safe vacuum packs for your flight back home.
+              <p className="text-[#526f58] leading-relaxed italic">
+                &ldquo;Store-bought turmeric in UK supermarkets is pale and bitter. This single-origin Lakadong turmeric completely changed our curries and morning golden milk. You can genuinely smell the mountain soil of Meghalaya.&rdquo;
               </p>
+              <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
+                Alistair &amp; Sunita Campbell &bull; Islington, London
+              </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 md:justify-end">
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCategoryFilter('spices');
-                  setActivePage('shop');
-                }}
-                className="px-5 py-3 rounded-xl bg-[#1c382b] text-white font-serif font-bold text-xs hover:bg-[#284c3b] transition-all cursor-pointer text-center"
-              >
-                Shop Single-Origin Spices
-              </button>
-              <button
-                type="button"
-                onClick={() => setActivePage('contact')}
-                className="px-5 py-3 rounded-xl bg-white border border-[#c9d6cb] text-[#1c382b] font-semibold text-xs hover:bg-[#f6f1e7] transition-all cursor-pointer text-center"
-              >
-                International Inquiries
-              </button>
+            <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                  🇺🇸 San Francisco, California
+                </span>
+                <span className="text-[#bf563b] text-[10px] font-medium">Farm-to-Table Enthusiast</span>
+              </div>
+              <p className="text-[#526f58] leading-relaxed italic">
+                &ldquo;The Tellicherry Extra Bold peppercorns cracked with a citrusy floral heat I had never experienced from commodity spice jars. Root &amp; River is doing for Indian village crops what single-origin beans did for coffee.&rdquo;
+              </p>
+              <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
+                David Ross &bull; Hayes Valley, San Francisco
+              </div>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                  🇦🇪 Dubai, United Arab Emirates
+                </span>
+                <span className="text-[#bf563b] text-[10px] font-medium">Ayurvedic Wellness Cook</span>
+              </div>
+              <p className="text-[#526f58] leading-relaxed italic">
+                &ldquo;The raw Western Ghats honey and cultured Gir cow Bilona ghee arrived in Dubai within 4 days, pristine and properly sealed. The nutty danedar ghee texture made our family halwa unforgettable.&rdquo;
+              </p>
+              <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
+                Fatima Al-Nuaimi &bull; Jumeirah, Dubai
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* AI Assistant Banner */}
+      {/* ========================================================= */}
+      {/* 11. AI SHOPPING ASSISTANT BANNER                          */}
+      {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-[#1c382b] text-white p-8 sm:p-12 relative overflow-hidden border border-[#264a39] flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="rounded-3xl bg-[#1c382b] text-white p-8 sm:p-12 relative overflow-hidden border border-[#264a39] flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl">
           <div className="space-y-4 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#264a39] text-[#c9d6cb] text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-[#bf563b]" />
-              <span>Contextual AI Sourcing Assistant</span>
+              <span>Intelligent EarthWise Sourcing Assistant</span>
             </div>
             <h2 className="font-serif font-bold text-3xl sm:text-4xl leading-tight">
-              Unsure which traditional herbs or grains suit your recipe?
+              Unsure which traditional herbs or grains suit your kitchen?
             </h2>
             <p className="text-xs sm:text-sm text-[#c9d6cb] leading-relaxed">
-              Ask our intelligent EarthWise Advisor for recommendations based on traditional Indian culinary practices, evening relaxation teas, or pure wood-pressed cooking oils.
+              Ask our EarthWise Shopping Advisor for recommendations based on ancestral culinary practices, evening relaxation teas, or pure wood-pressed cooking oils.
             </p>
             <p className="text-[11px] text-[#8aa18e] italic">
               *Educational culinary guide; not medical or therapeutic advice.
@@ -808,7 +1023,7 @@ export const HomePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsAiAssistantOpen(true)}
-            className="px-8 py-4 rounded-xl bg-[#bf563b] hover:bg-[#a7452d] text-white font-serif font-bold text-sm shadow-xl transition-all flex items-center gap-2 shrink-0 cursor-pointer"
+            className="px-8 py-4 rounded-xl bg-[#bf563b] hover:bg-[#a7452d] text-white font-serif font-bold text-xs uppercase tracking-wider shadow-xl transition-all flex items-center gap-2 shrink-0 cursor-pointer transform hover:scale-105"
           >
             <Sparkles className="w-4 h-4" />
             <span>Launch EarthWise Guide</span>
@@ -816,7 +1031,9 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Village Dispatch Newsletter */}
+      {/* ========================================================= */}
+      {/* 12. HARVEST DISPATCH NEWSLETTER SUBSCRIPTION             */}
+      {/* ========================================================= */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4">
         <div className="w-12 h-12 mx-auto rounded-2xl bg-[#eef3ef] text-[#1c382b] flex items-center justify-center">
           <Leaf className="w-6 h-6 text-[#59735d]" />
@@ -825,7 +1042,7 @@ export const HomePage: React.FC = () => {
           Receive the Seasonal Harvest Dispatch
         </h2>
         <p className="text-xs text-[#526f58] max-w-md mx-auto">
-          Get notified when fresh turmeric is milled, wild honey is gathered, or heirloom fragrant rice is aged and ready for dispatch.
+          Get notified when fresh Lakadong turmeric is milled, wild forest honey is harvested, or heirloom fragrant rice is aged and ready for dispatch.
         </p>
 
         <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto flex gap-2 pt-2">

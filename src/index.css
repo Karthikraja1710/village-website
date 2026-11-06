@@ -22,6 +22,7 @@
     background-color: #fbf9f4;
     color: #243028;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, .font-serif {
@@ -43,4 +44,67 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #9ab09d;
+}
+
+/* Keyframe animations for lively village organics experience */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.8deg);
+  }
+}
+
+.animate-float {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatSlow 6.5s ease-in-out infinite 2s;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(191, 86, 59, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(191, 86, 59, 0);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.8s infinite;
+}
+
+@keyframes subtleShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-card {
+  background-size: 200% 100%;
 }
