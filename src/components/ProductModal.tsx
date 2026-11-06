@@ -28,7 +28,8 @@ export const ProductModal: React.FC = () => {
     toggleFavorite, 
     isFavorite,
     addProductReview,
-    userProfile 
+    userProfile,
+    formatPrice 
   } = useStore();
 
   if (!selectedProduct) return null;
@@ -178,15 +179,15 @@ export const ProductModal: React.FC = () => {
                 {/* Price Display */}
                 <div className="pt-2 flex items-baseline gap-3">
                   <span className="text-3xl font-serif font-bold text-[#1c382b]">
-                    ₹{currentPrice}
+                    {formatPrice(currentPrice)}
                   </span>
                   {currentOriginalPrice && (
                     <span className="text-sm line-through text-[#8aa18e]">
-                      ₹{currentOriginalPrice}
+                      {formatPrice(currentOriginalPrice)}
                     </span>
                   )}
                   <span className="text-xs text-[#526f58]">
-                    Taxes included &bull; Sample pricing
+                    Taxes included &bull; Multi-currency enabled
                   </span>
                 </div>
 
@@ -208,7 +209,7 @@ export const ProductModal: React.FC = () => {
                         }`}
                       >
                         <span className="font-semibold block">{pack.size}</span>
-                        <span className="text-[11px] opacity-90">₹{pack.price}</span>
+                        <span className="text-[11px] opacity-90">{formatPrice(pack.price)}</span>
                       </button>
                     ))}
                   </div>
@@ -217,7 +218,7 @@ export const ProductModal: React.FC = () => {
                 {/* Delivery Estimate */}
                 <div className="flex items-center gap-2 text-xs text-[#526f58] pt-2">
                   <Clock className="w-4 h-4 text-[#8aa18e]" />
-                  <span>Estimated Delivery: <strong>{selectedProduct.estimatedDelivery}</strong></span>
+                  <span>Estimated Delivery: <strong>{selectedProduct.estimatedDelivery}</strong> (Worldwide Air Express: 5-9 days)</span>
                 </div>
               </div>
 
@@ -251,7 +252,7 @@ export const ProductModal: React.FC = () => {
                   className="flex-1 py-3 px-6 bg-[#1c382b] text-white font-serif font-bold text-sm rounded-xl hover:bg-[#284c3b] shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ShoppingBag className="w-4 h-4 text-[#8aa18e]" />
-                  <span>Add {quantity} to Basket &bull; ₹{currentPrice * quantity}</span>
+                  <span>Add {quantity} to Basket &bull; {formatPrice(currentPrice * quantity)}</span>
                 </button>
               </div>
             </div>

@@ -665,6 +665,127 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
+      {/* Village Goods for Foreign Kitchens & World Travelers */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="rounded-3xl bg-[#fffdfa] border border-[#e4dcce] p-8 sm:p-12 shadow-sm space-y-8">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-[#e4dcce] pb-6">
+            <div className="max-w-2xl space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#faeee9] text-[#bf563b] text-xs font-semibold uppercase tracking-wider border border-[#f0cfc5]">
+                <Globe className="w-3.5 h-3.5" />
+                <span>Global Village Pantry &bull; Sourced for Foreign Kitchens</span>
+              </span>
+              <h2 className="font-serif font-bold text-3xl sm:text-4xl text-[#1c382b]">
+                Single-Origin Village Goods for Foreign Cooks &amp; Global Homes
+              </h2>
+              <p className="text-xs sm:text-sm text-[#526f58] leading-relaxed">
+                Most spices and botanicals sold in supermarkets across the US, UK, Europe, and the Gulf are 2 to 4 years old, commodity-blended, and fumigated with industrial chemicals.
+                <br /><br />
+                Inspired by the world’s leading direct-trade single-origin culinary movements, Root &amp; River packages current-year village harvests into light-blocking, hermetically sealed tins and delivers them directly to food lovers and diaspora across 40+ countries.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-[#f6f1e7] border border-[#e4dcce] text-xs space-y-2 lg:max-w-xs">
+              <strong className="text-[#1c382b] block font-serif text-sm">International Buyer Assurance:</strong>
+              <ul className="space-y-1 text-[#526f58] text-[11px] list-disc list-inside">
+                <li>Phytosanitary inspection compliant</li>
+                <li>UV-blocking airtight metal tins &amp; amber glass</li>
+                <li>Prices switchable into USD, EUR, GBP, AED, CAD, AUD</li>
+                <li>Global Air Priority with DHL / FedEx tracking</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Foreign Testimonials / Global Voices */}
+          <div className="space-y-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#bf563b] block">
+              Voices from Foreign Kitchens &amp; Global Diaspora
+            </span>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+              <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                    🇬🇧 London, United Kingdom
+                  </span>
+                  <span className="text-[#bf563b] text-[10px] font-medium">Home Cook &amp; Baker</span>
+                </div>
+                <p className="text-[#526f58] leading-relaxed italic">
+                  &ldquo;Store-bought turmeric in UK supermarkets is pale and bitter. This single-origin Lakadong turmeric completely changed our curries and morning golden milk. You can genuinely smell the mountain soil of Meghalaya.&rdquo;
+                </p>
+                <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
+                  Alistair &amp; Sunita Campbell &bull; Islington, London
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                    🇺🇸 San Francisco, California
+                  </span>
+                  <span className="text-[#bf563b] text-[10px] font-medium">Farm-to-Table Enthusiast</span>
+                </div>
+                <p className="text-[#526f58] leading-relaxed italic">
+                  &ldquo;The Tellicherry Extra Bold peppercorns cracked with a citrusy floral heat I had never experienced from commodity spice jars. Root &amp; River is doing for Indian village crops what single-origin beans did for coffee.&rdquo;
+                </p>
+                <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
+                  David Ross &bull; Hayes Valley, San Francisco
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-[#fbf9f4] border border-[#e4dcce] space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-[#1c382b] flex items-center gap-1">
+                    🇦🇪 Dubai, United Arab Emirates
+                  </span>
+                  <span className="text-[#bf563b] text-[10px] font-medium">Ayurvedic Wellness Cook</span>
+                </div>
+                <p className="text-[#526f58] leading-relaxed italic">
+                  &ldquo;The raw Western Ghats honey and cultured Gir cow Bilona ghee arrived in Dubai within 4 days, pristine and properly sealed. The nutty danedar ghee texture made our family halwa unforgettable.&rdquo;
+                </p>
+                <div className="pt-2 border-t border-[#e4dcce] font-semibold text-[#1c382b] text-[11px]">
+                  Fatima Al-Nuaimi &bull; Jumeirah, Dubai
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Traveler Concierge: Visiting India or Shipping Abroad */}
+          <div className="p-6 rounded-2xl bg-[#eef3ef] border border-[#c9d6cb] grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div className="space-y-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#2e6844] block">
+                Foreign Travelers Visiting India
+              </span>
+              <h3 className="font-serif font-bold text-lg text-[#1c382b]">
+                Hotel &amp; Homestay Delivery Across India
+              </h3>
+              <p className="text-xs text-[#526f58] leading-relaxed">
+                Traveling to Delhi, Mumbai, Bengaluru, Jaipur, or Kochi? We can deliver your village harvest box directly to your hotel concierge, pre-packed in travel-safe vacuum packs for your flight back home.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 md:justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategoryFilter('spices');
+                  setActivePage('shop');
+                }}
+                className="px-5 py-3 rounded-xl bg-[#1c382b] text-white font-serif font-bold text-xs hover:bg-[#284c3b] transition-all cursor-pointer text-center"
+              >
+                Shop Single-Origin Spices
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePage('contact')}
+                className="px-5 py-3 rounded-xl bg-white border border-[#c9d6cb] text-[#1c382b] font-semibold text-xs hover:bg-[#f6f1e7] transition-all cursor-pointer text-center"
+              >
+                International Inquiries
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* AI Assistant Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl bg-[#1c382b] text-white p-8 sm:p-12 relative overflow-hidden border border-[#264a39] flex flex-col lg:flex-row items-center justify-between gap-8">

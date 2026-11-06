@@ -12,6 +12,7 @@ export const ShopPage: React.FC = () => {
     searchQuery,
     setSearchQuery,
     setIsAiAssistantOpen,
+    formatPrice,
   } = useStore();
 
   const [selectedOrigin, setSelectedOrigin] = useState<string>('all');
@@ -203,9 +204,9 @@ export const ShopPage: React.FC = () => {
             className="px-3 py-2 text-xs rounded-xl border border-[#c9d6cb] bg-[#fbf9f4] text-[#1c382b] focus:outline-none cursor-pointer"
           >
             <option value="all">Price: Any Price</option>
-            <option value="under-200">Under ₹200</option>
-            <option value="200-500">₹200 - ₹500</option>
-            <option value="above-500">Above ₹500</option>
+            <option value="under-200">Under {formatPrice(200)}</option>
+            <option value="200-500">{formatPrice(200)} - {formatPrice(500)}</option>
+            <option value="above-500">Above {formatPrice(500)}</option>
           </select>
 
           {/* Stock */}
@@ -280,9 +281,9 @@ export const ShopPage: React.FC = () => {
                 className="w-full px-2.5 py-1.5 rounded-lg border border-[#c9d6cb] bg-[#fbf9f4] text-[#1c382b]"
               >
                 <option value="all">Any Price</option>
-                <option value="under-200">Under ₹200</option>
-                <option value="200-500">₹200 - ₹500</option>
-                <option value="above-500">Above ₹500</option>
+                <option value="under-200">Under {formatPrice(200)}</option>
+                <option value="200-500">{formatPrice(200)} - {formatPrice(500)}</option>
+                <option value="above-500">Above {formatPrice(500)}</option>
               </select>
             </div>
 

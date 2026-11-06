@@ -12,7 +12,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     openProductDetails, 
     addToCart, 
     toggleFavorite, 
-    isFavorite 
+    isFavorite,
+    formatPrice 
   } = useStore();
 
   const [selectedPack, setSelectedPack] = useState(product.currentPackSize || product.packSizes[0]?.size || 'Standard');
@@ -158,11 +159,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div>
             <div className="flex items-baseline gap-1.5">
               <span className="font-serif font-bold text-lg text-[#1c382b]">
-                ₹{price}
+                {formatPrice(price)}
               </span>
               {originalPrice && (
                 <span className="text-xs line-through text-[#8aa18e]">
-                  ₹{originalPrice}
+                  {formatPrice(originalPrice)}
                 </span>
               )}
             </div>

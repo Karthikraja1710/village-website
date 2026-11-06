@@ -24,7 +24,7 @@ export const CheckoutPage: React.FC = () => {
     userProfile, 
     placeOrder, 
     setActivePage,
-    openProductDetails 
+    formatPrice,
   } = useStore();
 
   const [step, setStep] = useState<'details' | 'shipping' | 'payment' | 'confirmation'>('details');
@@ -36,6 +36,7 @@ export const CheckoutPage: React.FC = () => {
     fullName: userProfile.name || '',
     email: userProfile.email || '',
     phone: userProfile.phone || '',
+    country: 'India',
     addressLine1: defaultAddress ? defaultAddress.addressLine : '',
     villageOrCity: defaultAddress ? defaultAddress.villageCity : '',
     state: defaultAddress ? defaultAddress.state : 'Maharashtra',
@@ -44,7 +45,7 @@ export const CheckoutPage: React.FC = () => {
   });
 
   // Shipping Method
-  const [deliveryMethod, setDeliveryMethod] = useState<'standard' | 'express'>('standard');
+  const [deliveryMethod, setDeliveryMethod] = useState<'standard' | 'express' | 'international'>('standard');
 
   // Payment Method
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'cod' | 'card' | 'netbanking'>('upi');
@@ -52,11 +53,15 @@ export const CheckoutPage: React.FC = () => {
   // Coupon / Discount
   const [couponCode, setCouponCode] = useState('');
   const [discountAmount, setDiscountAmount] = useState(0);
-  const [couponApplied, setCouponApplied] = useState(false);
 
-  const freeDelivery = cartSubtotal >= prototypeSettings.freeShippingThreshold;
+  const freeDelivery = cartSubtotal >= prototypeSettings.freeShippingThreshold && shippingForm.country === 'India';
   const standardFee = freeDelivery ? 0 : prototypeSettings.standardShippingFee;
-  const shippingFee = deliveryMethod === 'express' ? 120 : standardFee;
+  const internationalFee = 1450; // ~$17.50 USD
+  const shippingFee = 
+    deliveryMethod === 'international' 
+      ? internationalFee 
+      : (deliveryMethod === 'express' ? 120 : standardFee);
+
   const estimatedTax = Math.round((cartSubtotal * prototypeSettings.taxRatePercent) / 100);
   const finalTotal = Math.max(0, cartSubtotal + shippingFee - discountAmount);
 
@@ -65,24 +70,25 @@ export const CheckoutPage: React.FC = () => {
     const code = couponCode.trim().toUpperCase();
     if (code === 'VILLAGE10') {
       setDiscountAmount(Math.round(cartSubtotal * 0.1));
-      setCouponApplied(true);
     } else if (code === 'HARVESTFRESH') {
       setDiscountAmount(Math.round(cartSubtotal * 0.15));
-      setCouponApplied(true);
     } else {
       alert('Try promo code VILLAGE10 (10% off) or HARVESTFRESH (15% off).');
     }
   };
 
   const handleConfirmOrder = () => {
-    const deliveryMethodLabel = deliveryMethod === 'express'
-      ? 'Express Harvest Courier (1 - 2 business days)'
-      : 'Standard Farm-to-Fork Post (3 - 5 business days)';
+    const deliveryMethodLabel = 
+      deliveryMethod === 'international'
+        ? `Global Air Express (${shippingForm.country}) &bull; 5 - 9 business days via DHL/FedEx (Customs Cleared)`
+        : deliveryMethod === 'express'
+        ? 'Express Seasonal Harvest Courier (1 - 2 business days)'
+        : 'Standard Farm-to-Fork Post (3 - 5 business days)';
 
     const paymentLabel = 
       paymentMethod === 'upi' ? 'Demo Instant UPI / QR Scan (Prototype)' :
       paymentMethod === 'cod' ? 'Demo Cash on Delivery (Prototype)' :
-      paymentMethod === 'card' ? 'Demo Card Payment (Prototype)' : 'Demo Net Banking (Prototype)';
+      paymentMethod === 'card' ? 'Demo International / Domestic Card (Prototype)' : 'Demo Net Banking (Prototype)';
 
     const order = placeOrder({
       shippingDetails: shippingForm,
@@ -315,6 +321,7 @@ export const CheckoutPage: React.FC = () => {
                             fullName: addr.name,
                             phone: addr.phone,
                             email: userProfile.email,
+                            country: 'India',
                             addressLine1: addr.addressLine,
                             villageOrCity: addr.villageCity,
                             state: addr.state,
@@ -332,6 +339,36 @@ export const CheckoutPage: React.FC = () => {
               )}
 
               <div className="space-y-4 text-xs">
+                <div>
+                  <label className="block font-semibold text-[#1c382b] mb-1">
+                    Destination Country &bull; Domestic &amp; Worldwide Shipping
+                  </label>
+                  <select
+                    value={shippingForm.country}
+                    onChange={(e) => {
+                      const c = e.target.value;
+                      setShippingForm({ ...shippingForm, country: c });
+                      if (c !== 'India') {
+                        setDeliveryMethod('international');
+                      } else {
+                        setDeliveryMethod('standard');
+                      }
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#c9d6cb] bg-white text-[#1c382b] font-medium"
+                  >
+                    <option value="India">🇮🇳 India (Pan-India Metro &amp; Rural Express)</option>
+                    <option value="United States">🇺🇸 United States (Global Air Express)</option>
+                    <option value="United Kingdom">🇬🇧 United Kingdom (Global Air Express)</option>
+                    <option value="Canada">🇨🇦 Canada (Global Air Express)</option>
+                    <option value="Australia">🇦🇺 Australia (Global Air Express)</option>
+                    <option value="United Arab Emirates">🇦🇪 United Arab Emirates (Gulf Air Express)</option>
+                    <option value="Germany">🇩🇪 Germany (EU Air Express)</option>
+                    <option value="Singapore">🇸🇬 Singapore (Asia Air Express)</option>
+                    <option value="France">🇫🇷 France (EU Air Express)</option>
+                    <option value="Other International">🌍 Other Foreign Destination</option>
+                  </select>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block font-semibold text-[#1c382b] mb-1">Full Name</label>
@@ -496,12 +533,40 @@ export const CheckoutPage: React.FC = () => {
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <strong className="font-serif font-bold text-sm text-[#1c382b]">
-                        Express Seasonal Harvest Courier
+                        Express Seasonal Harvest Courier (India Metro)
                       </strong>
-                      <span className="font-bold text-xs text-[#1c382b]">₹120</span>
+                      <span className="font-bold text-xs text-[#1c382b]">{formatPrice(120)}</span>
                     </div>
                     <p className="text-xs text-[#526f58] mt-1">
                       Estimated delivery in <strong>1 - 2 business days</strong>. Priority handling for fresh vegetables and fresh cold-pressed batches.
+                    </p>
+                  </div>
+                </label>
+
+                <label
+                  onClick={() => setDeliveryMethod('international')}
+                  className={`p-4 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${
+                    deliveryMethod === 'international'
+                      ? 'border-[#1c382b] bg-[#eef3ef]'
+                      : 'border-[#e4dcce] bg-white hover:border-[#8aa18e]'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="shippingMethod"
+                    checked={deliveryMethod === 'international'}
+                    onChange={() => setDeliveryMethod('international')}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <strong className="font-serif font-bold text-sm text-[#1c382b] flex items-center gap-1.5">
+                        <span>✈️ Global Air Express (DHL / FedEx International)</span>
+                      </strong>
+                      <span className="font-bold text-xs text-[#1c382b]">{formatPrice(internationalFee)}</span>
+                    </div>
+                    <p className="text-xs text-[#526f58] mt-1">
+                      Estimated delivery in <strong>5 - 9 business days</strong> worldwide. Packaged in hermetically sealed UV-protective tins with export phytosanitary clearance certificate.
                     </p>
                   </div>
                 </label>
@@ -639,7 +704,7 @@ export const CheckoutPage: React.FC = () => {
                   className="py-3 px-8 bg-[#bf563b] hover:bg-[#a7452d] text-white font-serif font-bold text-sm rounded-xl shadow-lg transition-all cursor-pointer flex items-center gap-2"
                 >
                   <Check className="w-4 h-4" />
-                  <span>Place Demo Order &bull; ₹{finalTotal}</span>
+                  <span>Place Demo Order &bull; {formatPrice(finalTotal)}</span>
                 </button>
               </div>
             </div>
@@ -671,7 +736,7 @@ export const CheckoutPage: React.FC = () => {
                     </span>
                   </div>
                   <span className="font-bold text-[#1c382b]">
-                    ₹{item.unitPrice * item.quantity}
+                    {formatPrice(item.unitPrice * item.quantity)}
                   </span>
                 </div>
               ))}
@@ -698,31 +763,31 @@ export const CheckoutPage: React.FC = () => {
             <div className="pt-3 border-t border-[#e4dcce] space-y-2 text-xs text-[#526f58]">
               <div className="flex justify-between">
                 <span>Produce Subtotal</span>
-                <span className="font-semibold text-[#1c382b]">₹{cartSubtotal}</span>
+                <span className="font-semibold text-[#1c382b]">{formatPrice(cartSubtotal)}</span>
               </div>
 
               {discountAmount > 0 && (
                 <div className="flex justify-between text-[#2e6844] font-medium">
                   <span>Harvest Discount Applied</span>
-                  <span>- ₹{discountAmount}</span>
+                  <span>- {formatPrice(discountAmount)}</span>
                 </div>
               )}
 
               <div className="flex justify-between">
-                <span>Village Delivery</span>
+                <span>Delivery / Air Express</span>
                 <span>
-                  {shippingFee === 0 ? <strong className="text-[#2e6844]">FREE</strong> : `₹${shippingFee}`}
+                  {shippingFee === 0 ? <strong className="text-[#2e6844]">FREE</strong> : formatPrice(shippingFee)}
                 </span>
               </div>
 
               <div className="flex justify-between text-[11px] text-[#8aa18e]">
                 <span>Estimated Statutory Tax ({prototypeSettings.taxRatePercent}%)</span>
-                <span>₹{estimatedTax} (Included)</span>
+                <span>{formatPrice(estimatedTax)} (Included)</span>
               </div>
 
               <div className="pt-2 border-t border-[#e4dcce] flex justify-between text-base font-bold text-[#1c382b]">
                 <span>Total Due</span>
-                <span>₹{finalTotal}</span>
+                <span>{formatPrice(finalTotal)}</span>
               </div>
             </div>
           </div>

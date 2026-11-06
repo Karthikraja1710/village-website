@@ -7,7 +7,9 @@ import {
   UserAddress, 
   Review, 
   FeedbackSubmission, 
-  PrototypeSettings 
+  PrototypeSettings,
+  CurrencyCode,
+  CurrencyConfig
 } from '../types';
 import { SAMPLE_PRODUCTS } from '../data/products';
 import { INITIAL_ORDERS, INITIAL_USER_PROFILE, INITIAL_PROTOTYPE_SETTINGS } from '../data/mockData';
@@ -21,7 +23,23 @@ export interface ToastMessage {
   type?: 'success' | 'info' | 'warning';
 }
 
+export const CURRENCY_CONFIGS: Record<CurrencyCode, CurrencyConfig> = {
+  INR: { code: 'INR', symbol: '₹', name: 'Indian Rupee', flag: '🇮🇳', rateAgainstInr: 1 },
+  USD: { code: 'USD', symbol: '$', name: 'US Dollar', flag: '🇺🇸', rateAgainstInr: 0.012 },
+  EUR: { code: 'EUR', symbol: '€', name: 'Euro', flag: '🇪🇺', rateAgainstInr: 0.011 },
+  GBP: { code: 'GBP', symbol: '£', name: 'British Pound', flag: '🇬🇧', rateAgainstInr: 0.0095 },
+  AED: { code: 'AED', symbol: 'AED ', name: 'UAE Dirham', flag: '🇦🇪', rateAgainstInr: 0.044 },
+  CAD: { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar', flag: '🇨🇦', rateAgainstInr: 0.016 },
+  AUD: { code: 'AUD', symbol: 'A$', name: 'Australian Dollar', flag: '🇦🇺', rateAgainstInr: 0.018 },
+};
+
 interface StoreContextType {
+  // Currency & Internationalization
+  currency: CurrencyCode;
+  setCurrency: (c: CurrencyCode) => void;
+  formatPrice: (inr: number) => string;
+  currencies: Record<CurrencyCode, CurrencyConfig>;
+
   // Navigation & Page routing
   activePage: PageView;
   setActivePage: (page: PageView) => void;
@@ -103,6 +121,12 @@ interface StoreContextType {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Currency & Internationalization
+  const [currency, setCurrencyState] = useState<CurrencyCode>(() => {
+    const saved = localStorage.getItem('rr_currency_v1');
+    return (saved as CurrencyCode) || 'INR';
+  });
+
   // Navigation
   const [activePage, setActivePage] = useState<PageView>('home');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('all');
@@ -235,6 +259,22 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const dismissToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  const setCurrency = (c: CurrencyCode) => {
+    setCurrencyState(c);
+    localStorage.setItem('rr_currency_v1', c);
+    const conf = CURRENCY_CONFIGS[c];
+    showToast('Currency Switched', `Displaying prices in ${conf.name} (${conf.symbol})`, 'info');
+  };
+
+  const formatPrice = (priceInInr: number): string => {
+    const conf = CURRENCY_CONFIGS[currency] || CURRENCY_CONFIGS.INR;
+    if (conf.code === 'INR') {
+      return `₹${priceInInr.toLocaleString('en-IN')}`;
+    }
+    const converted = priceInInr * conf.rateAgainstInr;
+    return `${conf.symbol}${converted < 10 ? converted.toFixed(2) : Math.round(converted)}`;
   };
 
   // Add recently viewed
@@ -518,6 +558,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <StoreContext.Provider
       value={{
+        currency,
+        setCurrency,
+        formatPrice,
+        currencies: CURRENCY_CONFIGS,
         activePage,
         setActivePage,
         selectedCategoryFilter,

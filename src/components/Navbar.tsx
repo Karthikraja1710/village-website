@@ -10,7 +10,8 @@ import {
   Sparkles, 
   Leaf, 
   ArrowRight,
-  SlidersHorizontal 
+  SlidersHorizontal,
+  Globe
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -26,11 +27,14 @@ export const Navbar: React.FC = () => {
     setSearchQuery,
     products,
     openProductDetails,
-    setSelectedCategoryFilter,
+    currency,
+    setCurrency,
+    currencies,
   } = useStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [searchSuggestions, setSearchSuggestions] = useState<typeof products>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -200,7 +204,55 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Right Action Icons: AI Guide, Favorites, Account, Basket */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Global Currency Switcher */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white border border-[#c9d6cb] hover:border-[#1c382b] text-xs font-semibold text-[#1c382b] transition-all cursor-pointer shadow-2xs"
+                title="Change display currency (Domestic & Foreign)"
+              >
+                <span className="text-sm">{currencies[currency]?.flag}</span>
+                <span className="font-mono text-[11px] font-bold">{currency}</span>
+              </button>
+
+              {isCurrencyOpen && (
+                <div 
+                  className="absolute right-0 top-10 w-44 bg-white rounded-2xl shadow-xl border border-[#e4dcce] overflow-hidden z-50 p-1.5 space-y-1 animate-in fade-in duration-150"
+                  onMouseLeave={() => setIsCurrencyOpen(false)}
+                >
+                  <div className="px-2.5 py-1 text-[10px] uppercase font-bold text-[#8aa18e] tracking-wider border-b border-[#f0ece3]">
+                    Select Currency
+                  </div>
+                  {(Object.keys(currencies) as Array<keyof typeof currencies>).map((code) => {
+                    const conf = currencies[code];
+                    return (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => {
+                          setCurrency(code);
+                          setIsCurrencyOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                          currency === code
+                            ? 'bg-[#1c382b] text-white font-bold'
+                            : 'text-[#1c382b] hover:bg-[#f6f1e7]'
+                        }`}
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <span>{conf.flag}</span>
+                          <span>{conf.code}</span>
+                        </span>
+                        <span className="text-[11px] opacity-80">{conf.symbol}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             {/* AI Assistant Button */}
             <button
               onClick={() => setIsAiAssistantOpen(true)}

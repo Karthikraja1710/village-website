@@ -13,6 +13,7 @@ export const CartDrawer: React.FC = () => {
     prototypeSettings,
     setActivePage,
     showToast,
+    formatPrice,
   } = useStore();
 
   const [couponCode, setCouponCode] = useState('');
@@ -184,10 +185,10 @@ export const CartDrawer: React.FC = () => {
 
                     <div className="text-right">
                       <span className="text-sm font-bold text-[#1c382b]">
-                        ₹{item.unitPrice * item.quantity}
+                        {formatPrice(item.unitPrice * item.quantity)}
                       </span>
                       <div className="text-[10px] text-[#59735d]">
-                        ₹{item.unitPrice} each
+                        {formatPrice(item.unitPrice)} each
                       </div>
                     </div>
                   </div>
@@ -224,33 +225,33 @@ export const CartDrawer: React.FC = () => {
             <div className="space-y-1.5 text-xs text-[#526f58]">
               <div className="flex justify-between">
                 <span>Basket Subtotal</span>
-                <span className="font-semibold text-[#1c382b]">₹{cartSubtotal}</span>
+                <span className="font-semibold text-[#1c382b]">{formatPrice(cartSubtotal)}</span>
               </div>
               {appliedDiscount > 0 && (
                 <div className="flex justify-between text-[#2e6844] font-medium">
                   <span>{discountLabel}</span>
-                  <span>- ₹{appliedDiscount}</span>
+                  <span>- {formatPrice(appliedDiscount)}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span>Estimated Village Delivery</span>
+                <span>Estimated Delivery</span>
                 <span>
                   {differenceToFreeShipping === 0 ? (
                     <span className="text-[#2e6844] font-medium">FREE</span>
                   ) : (
-                    `₹${prototypeSettings.standardShippingFee}`
+                    formatPrice(prototypeSettings.standardShippingFee)
                   )}
                 </span>
               </div>
               <div className="border-t border-[#e4dcce] pt-2 flex justify-between text-sm font-bold text-[#1c382b]">
                 <span>Total Estimated</span>
                 <span>
-                  ₹{Math.max(
+                  {formatPrice(Math.max(
                     0,
                     cartSubtotal +
                       (differenceToFreeShipping === 0 ? 0 : prototypeSettings.standardShippingFee) -
                       appliedDiscount
-                  )}
+                  ))}
                 </span>
               </div>
             </div>

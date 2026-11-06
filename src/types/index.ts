@@ -79,10 +79,21 @@ export interface CartItem {
   quantity: number;
 }
 
+export type CurrencyCode = 'INR' | 'USD' | 'EUR' | 'GBP' | 'AED' | 'CAD' | 'AUD';
+
+export interface CurrencyConfig {
+  code: CurrencyCode;
+  symbol: string;
+  name: string;
+  flag: string;
+  rateAgainstInr: number;
+}
+
 export interface ShippingDetails {
   fullName: string;
   email: string;
   phone: string;
+  country: string;
   addressLine1: string;
   addressLine2?: string;
   villageOrCity: string;
