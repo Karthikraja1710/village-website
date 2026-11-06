@@ -41,6 +41,8 @@ export interface Product {
   gallery?: string[];
   
   // Sourcing & Village Details
+  brandId?: string;
+  brandName?: string;
   villageOrigin: string;
   district: string;
   state: string;

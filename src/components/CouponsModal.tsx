@@ -172,3 +172,4 @@ export const CouponsModal: React.FC = () => {
     </div>
   );
 };
+

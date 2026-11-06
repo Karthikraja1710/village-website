@@ -16,7 +16,8 @@ import {
   Edit3, 
   Plus, 
   Minus,
-  MessageSquare
+  MessageSquare,
+  Zap
 } from 'lucide-react';
 import { Product } from '../types';
 
@@ -25,6 +26,8 @@ export const ProductModal: React.FC = () => {
     selectedProduct, 
     setSelectedProduct, 
     addToCart, 
+    expressCheckout,
+    openBrandShop,
     toggleFavorite, 
     isFavorite,
     addProductReview,
@@ -153,6 +156,21 @@ export const ProductModal: React.FC = () => {
                 <h2 id="product-modal-title" className="font-serif font-bold text-2xl text-[#1c382b] leading-tight">
                   {selectedProduct.name}
                 </h2>
+                {selectedProduct.brandName && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (selectedProduct.brandId) {
+                        openBrandShop(selectedProduct.brandId);
+                        setSelectedProduct(null);
+                      }
+                    }}
+                    className="text-xs font-semibold text-[#2e6844] hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <span>By {selectedProduct.brandName}</span>
+                    <span className="text-[10px] bg-[#eef3ef] px-1.5 py-0.5 rounded text-[#2e6844] font-normal">&bull; Explore Brand &rarr;</span>
+                  </button>
+                )}
                 <p className="text-xs text-[#526f58] leading-relaxed">
                   {selectedProduct.tagline}
                 </p>
@@ -249,10 +267,23 @@ export const ProductModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 py-3 px-6 bg-[#1c382b] text-white font-serif font-bold text-sm rounded-xl hover:bg-[#284c3b] shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 py-3 px-5 bg-[#1c382b] text-white font-serif font-bold text-xs sm:text-sm rounded-xl hover:bg-[#284c3b] shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ShoppingBag className="w-4 h-4 text-[#8aa18e]" />
-                  <span>Add {quantity} to Basket &bull; {formatPrice(currentPrice * quantity)}</span>
+                  <span>Add to Basket &bull; {formatPrice(currentPrice * quantity)}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    expressCheckout(selectedProduct, selectedPack, quantity);
+                    setSelectedProduct(null);
+                  }}
+                  className="py-3 px-5 bg-[#bf563b] hover:bg-[#a7452d] text-white font-serif font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+                  title="Express 1-Click Checkout"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>Buy Now</span>
                 </button>
               </div>
             </div>

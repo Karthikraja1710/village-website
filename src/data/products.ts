@@ -14,6 +14,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
   // 1. TURMERIC & SPICES
   {
     id: 'prod-turmeric-lakadong',
+    brandId: 'brand-jaintia',
+    brandName: 'Jaintia Mountain Collective',
     name: 'Single-Origin Lakadong Turmeric Powder',
     localName: 'Lakadong Haldi',
     tagline: 'High curcumin (7.2% sample tested) from the Jaintia Hills',
@@ -83,6 +85,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-pepper-tellicherry',
+    brandId: 'brand-wayanad',
+    brandName: 'Wayanad Forest Stewards',
     name: 'Malabar Tellicherry Garbled Extra Bold Black Pepper',
     localName: 'Idukki Kurumulaku',
     tagline: 'Hand-picked vine-ripened berries with pungent floral heat',
@@ -142,6 +146,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
   // 2. TULSI, LEMONGRASS & HERBS
   {
     id: 'prod-herbs-tulsi-blend',
+    brandId: 'brand-kangra',
+    brandName: 'Kangra Valley Herbal Sanctuary',
     name: 'Wild Sacred Tulsi Leaf Tea (Krishna & Rama Leaf Blend)',
     localName: 'Pavitra Tulsi Patra',
     tagline: 'Whole-leaf shade-dried blend of dark Krishna & green Rama Tulsi',
@@ -200,6 +206,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-herbs-lemongrass',
+    brandId: 'brand-kangra',
+    brandName: 'Kangra Valley Herbal Sanctuary',
     name: 'Mountain Cut Nilgiri Lemongrass',
     localName: 'Ganjani Kavat',
     tagline: 'Crisp aromatic stalks hand-harvested from misty hill terraces',
@@ -257,6 +265,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-herbs-ashwagandha',
+    brandId: 'brand-kangra',
+    brandName: 'Kangra Valley Herbal Sanctuary',
     name: 'Slow-Milled Nagori Ashwagandha Root Powder',
     localName: 'Desi Ashwagandha Churna',
     tagline: 'Whole matured roots from arid red soils, traditional stone ground',
@@ -315,6 +325,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
   // 3. FRESH VEGETABLES & GREENS
   {
     id: 'prod-veg-desi-spinach',
+    brandId: 'brand-pollachi',
+    brandName: 'Pollachi Chekku Oil Guild',
     name: 'Native Country Spinach (Desi Palak)',
     localName: 'Gavran Palak',
     tagline: 'Tender broad leaves cut fresh at dawn from fertile riverbank soil',
@@ -372,6 +384,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-veg-heirloom-tomatoes',
+    brandId: 'brand-pollachi',
+    brandName: 'Pollachi Chekku Oil Guild',
     name: 'Heirloom Country Tomatoes (Desi Tamatar)',
     localName: 'Gavthi Lal Tamatar',
     tagline: 'Sun-blushed, juicy, and naturally tangy country variety',
@@ -429,6 +443,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-veg-moringa',
+    brandId: 'brand-pollachi',
+    brandName: 'Pollachi Chekku Oil Guild',
     name: 'Tender Moringa Pods & Fresh Leaves Combo',
     localName: 'Munagakaya & Murungai',
     tagline: 'Slender, seed-soft drumsticks with a fresh bunch of drumstick greens',
@@ -487,6 +503,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
   // 4. WILD HONEY & SWEET NECTAR
   {
     id: 'prod-honey-wild-forest',
+    brandId: 'brand-bastar',
+    brandName: 'Bastar Tribal Honey Collective',
     name: 'Raw Multifloral Wild Forest Honey',
     localName: 'Vanathene / Jungli Madh',
     tagline: 'Raw, unpasteurized, and unfiltered nectar from deep forest flora',
@@ -545,6 +563,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-honey-jaggery-blocks',
+    brandId: 'brand-bastar',
+    brandName: 'Bastar Tribal Honey Collective',
     name: 'Artisanal Desi Sugarcane Jaggery Blocks',
     localName: 'Kolhapuri Natural Gul',
     tagline: 'Single-source cane juice boiled in iron pans, chemical-free clarifying',
@@ -603,6 +623,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
   // 5. HERITAGE RICE & MILLETS
   {
     id: 'prod-grain-gobindobhog',
+    brandId: 'brand-bengal',
+    brandName: 'Burdwan Heritage Rice Guild',
     name: 'Fragrant Gobindobhog Heritage Aromatic Rice',
     localName: 'Gobindobhog Chal',
     tagline: 'Short-grain, buttery aromatic heirloom rice from the Burdwan Delta',
@@ -661,6 +683,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-grain-kerala-matta',
+    brandId: 'brand-wayanad',
+    brandName: 'Wayanad Forest Stewards',
     name: 'Red Palakkad Matta Parboiled Rice',
     localName: 'Palakkadan Vada Matta',
     tagline: 'Hearty unpolished red-pericarp grain rich in minerals and dietary fiber',
@@ -718,6 +742,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-grain-foxtail-millet',
+    brandId: 'brand-bengal',
+    brandName: 'Burdwan Heritage Rice Guild',
     name: 'Unpolished Foxtail Millet (Kangni / Navane)',
     localName: 'Desi Navane Akki',
     tagline: 'Drought-resilient ancient grain slowly de-hulled to protect bran',
@@ -776,6 +802,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
   // 6. COLD-PRESSED OILS & PANTRY
   {
     id: 'prod-oil-wood-pressed-coconut',
+    brandId: 'brand-pollachi',
+    brandName: 'Pollachi Chekku Oil Guild',
     name: 'Artisanal Wood-Pressed Extra Virgin Coconut Oil',
     localName: 'Mara Chekku Thengai Ennai',
     tagline: 'Cold wood-pressed from sun-dried sulfur-free village copra',
@@ -835,6 +863,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-oil-a2-gir-ghee',
+    brandId: 'brand-jaintia',
+    brandName: 'Jaintia Mountain Collective',
     name: 'Hand-Churned A2 Bilona Gir Cow Cultured Ghee',
     localName: 'Desi Gaumata Bilona Ghee',
     tagline: 'Made from whole curd using traditional bi-directional wooden churn',
@@ -893,6 +923,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-oil-mustard-kachi-ghani',
+    brandId: 'brand-bengal',
+    brandName: 'Burdwan Heritage Rice Guild',
     name: 'Cold-Pressed Raw Mustard Oil (Kachi Ghani)',
     localName: 'Shuddh Sarson Tel',
     tagline: 'Pungent, cold-pressed from black mustard seeds in village kolhu',
@@ -950,6 +982,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
 
   {
     id: 'prod-pantry-wild-tamarind',
+    brandId: 'brand-wayanad',
+    brandName: 'Wayanad Forest Stewards',
     name: 'Wild Forest Seedless Desi Tamarind',
     localName: 'Van Imphal Imli',
     tagline: 'Sun-dried dark sour pulp hand-harvested from ancient forest trees',

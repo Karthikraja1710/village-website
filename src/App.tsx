@@ -18,6 +18,7 @@ import { HerbsPantryPage } from './pages/HerbsPantryPage';
 import { ContactPage } from './pages/ContactPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { CheckoutPage } from './pages/CheckoutPage';
+import { BrandsPage } from './pages/BrandsPage';
 
 // Mobile bottom bar icons
 import { Home, Store, Sparkles, User, ShoppingBag } from 'lucide-react';
@@ -41,6 +42,8 @@ const MainLayout: React.FC = () => {
         return <DashboardPage />;
       case 'checkout':
         return <CheckoutPage />;
+      case 'brands':
+        return <BrandsPage />;
       default:
         return <HomePage />;
     }

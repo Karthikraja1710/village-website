@@ -14,7 +14,7 @@ import {
 import { SAMPLE_PRODUCTS } from '../data/products';
 import { INITIAL_ORDERS, INITIAL_USER_PROFILE, INITIAL_PROTOTYPE_SETTINGS } from '../data/mockData';
 
-export type PageView = 'home' | 'shop' | 'story' | 'herbs' | 'contact' | 'dashboard' | 'checkout';
+export type PageView = 'home' | 'shop' | 'story' | 'herbs' | 'contact' | 'dashboard' | 'checkout' | 'brands';
 
 export interface ToastMessage {
   id: string;
@@ -45,6 +45,9 @@ interface StoreContextType {
   setActivePage: (page: PageView) => void;
   selectedCategoryFilter: string;
   setSelectedCategoryFilter: (category: string) => void;
+  selectedBrandFilter: string;
+  setSelectedBrandFilter: (brandId: string) => void;
+  openBrandShop: (brandId: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   
@@ -54,9 +57,10 @@ interface StoreContextType {
   setSelectedProduct: (product: Product | null) => void;
   openProductDetails: (productId: string) => void;
   
-  // Cart
+  // Cart & Fast Buying
   cart: CartItem[];
   addToCart: (product: Product, selectedPackSize?: string, quantity?: number) => void;
+  expressCheckout: (product: Product, selectedPackSize?: string, quantity?: number) => void;
   updateCartQuantity: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
   clearCart: () => void;
@@ -132,6 +136,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Navigation
   const [activePage, setActivePage] = useState<PageView>('home');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('all');
+  const [selectedBrandFilter, setSelectedBrandFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   // Modals
@@ -328,6 +333,21 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       `${product.name} (${packSize}) x${quantity} added to your village basket.`,
       'success'
     );
+  };
+
+  // Express 1-click checkout for fast customer buying
+  const expressCheckout = (product: Product, selectedPackSize?: string, quantity: number = 1) => {
+    addToCart(product, selectedPackSize, quantity);
+    setActivePage('checkout');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Quick brand filter transition to shop
+  const openBrandShop = (brandId: string) => {
+    setSelectedBrandFilter(brandId);
+    setSelectedCategoryFilter('all');
+    setActivePage('shop');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const updateCartQuantity = (itemId: string, quantity: number) => {
@@ -569,6 +589,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setActivePage,
         selectedCategoryFilter,
         setSelectedCategoryFilter,
+        selectedBrandFilter,
+        setSelectedBrandFilter,
+        openBrandShop,
         searchQuery,
         setSearchQuery,
         products,
@@ -577,6 +600,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         openProductDetails,
         cart,
         addToCart,
+        expressCheckout,
         updateCartQuantity,
         removeFromCart,
         clearCart,

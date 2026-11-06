@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { Product } from '../types';
-import { Heart, ShoppingBag, Star, MapPin, Clock, Eye, Check } from 'lucide-react';
+import { Heart, ShoppingBag, Star, MapPin, Clock, Eye, Check, Zap, Plus, Minus } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -11,12 +11,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { 
     openProductDetails, 
     addToCart, 
+    expressCheckout,
     toggleFavorite, 
     isFavorite,
-    formatPrice 
+    formatPrice,
+    openBrandShop
   } = useStore();
 
   const [selectedPack, setSelectedPack] = useState(product.currentPackSize || product.packSizes[0]?.size || 'Standard');
+  const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
 
   const currentPackOption = product.packSizes.find((p) => p.size === selectedPack) || product.packSizes[0];
@@ -32,9 +35,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    addToCart(product, selectedPack, 1);
+    addToCart(product, selectedPack, quantity);
     setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 1400);
+    setTimeout(() => setJustAdded(false), 1600);
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    expressCheckout(product, selectedPack, quantity);
   };
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
@@ -42,10 +50,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     toggleFavorite(product.id);
   };
 
+  const handleBrandClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (product.brandId) {
+      openBrandShop(product.brandId);
+    }
+  };
+
   return (
     <div
       onClick={() => openProductDetails(product.id)}
-      className="group relative bg-[#fffdfa] rounded-2xl border border-[#e4dcce] overflow-hidden hover:border-[#8aa18e] hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer"
+      className="group relative bg-[#fffdfa] rounded-2xl border border-[#e4dcce] overflow-hidden hover:border-[#2e6844] hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer"
     >
       <div>
         {/* Product Image Box with Badges & Hover Actions */}
@@ -57,10 +72,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
           />
 
-          {/* Top-Left Badges (Sale / Seasonal / Category) */}
+          {/* Top-Left Badges (Sale / Discount % - Matches video frame_044) */}
           <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 items-start z-10">
             {discountPercent ? (
-              <span className="bg-[#bf563b] text-white text-[10px] font-bold tracking-wide uppercase px-2.5 py-0.5 rounded-full shadow-sm">
+              <span className="bg-[#2e6844] text-white text-[10px] font-bold tracking-wide uppercase px-2.5 py-0.5 rounded-full shadow-sm">
                 {discountPercent}% OFF
               </span>
             ) : product.badge ? (
@@ -109,16 +124,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Stock Notification Tag */}
           {product.stockStatus === 'low-stock' && (
             <div className="absolute bottom-2 left-2 z-10 bg-[#bf563b] text-white text-[10px] font-semibold px-2 py-0.5 rounded shadow-xs">
-              Only {product.availableQuantity} units left in batch
+              Only {product.availableQuantity} left in batch
             </div>
           )}
 
-          {/* Animated Hover Action Bar (Slide-up from bottom of image) */}
-          <div className="absolute inset-x-2 bottom-2 z-20 transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+          {/* Animated Hover Action Bar */}
+          <div className="absolute inset-x-2 bottom-2 z-20 transform translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex gap-2">
             <button
               type="button"
               onClick={handleAddToCart}
-              className={`w-full py-2.5 px-3 rounded-xl font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              className={`flex-1 py-2 px-2.5 rounded-xl font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                 justAdded
                   ? 'bg-[#2e6844] text-white'
                   : 'bg-[#1c382b] hover:bg-[#284c3b] text-white'
@@ -127,30 +142,47 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {justAdded ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-white" />
-                  <span>Added to Basket</span>
+                  <span>Added</span>
                 </>
               ) : (
                 <>
                   <ShoppingBag className="w-3.5 h-3.5 text-[#8aa18e]" />
-                  <span>Add to Basket &bull; {formatPrice(price)}</span>
+                  <span>Add to Basket</span>
                 </>
               )}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              className="px-3 py-2 rounded-xl bg-[#bf563b] hover:bg-[#a7452d] text-white font-bold text-xs shadow-lg transition-all cursor-pointer flex items-center gap-1"
+              title="Express Buy Now"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>Buy</span>
             </button>
           </div>
         </div>
 
         {/* Product Details Section */}
         <div className="p-4 space-y-2">
-          {/* Origin & Grower */}
-          <div className="flex items-center gap-1.5 text-[11px] text-[#526f58]">
-            <MapPin className="w-3 h-3 text-[#8aa18e] shrink-0" />
-            <span className="line-clamp-1 font-medium">{product.villageOrigin}, {product.state}</span>
+          {/* Category & Brand Link (Matches video frame_044) */}
+          <div className="space-y-0.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8aa18e] block">
+              {product.categoryLabel}
+            </span>
+            {/* Product Name */}
+            <h3 className="font-serif font-bold text-base text-[#1c382b] leading-snug group-hover:text-[#2e6844] transition-colors line-clamp-1">
+              {product.name}
+            </h3>
+            {/* Brand attribution (Matches "By Village Organics 2") */}
+            <div 
+              onClick={handleBrandClick}
+              className="text-[11px] font-medium text-[#2e6844] hover:underline cursor-pointer flex items-center gap-1"
+            >
+              <span>By {product.brandName || product.growerName}</span>
+            </div>
           </div>
-
-          {/* Product Name */}
-          <h3 className="font-serif font-bold text-base text-[#1c382b] leading-snug group-hover:text-[#bf563b] transition-colors line-clamp-1">
-            {product.name}
-          </h3>
 
           <p className="text-xs text-[#59735d] line-clamp-1">
             {product.tagline}
@@ -195,42 +227,69 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
       </div>
 
-      {/* Bottom Footer: Price & Add Button */}
+      {/* Bottom Footer: Price, Quantity & Signature Mint-Green Add Button */}
+      {/* (Exact match to reference video frame_044) */}
       <div className="p-4 pt-0">
         <div className="pt-2.5 border-t border-[#f0ece3] flex items-center justify-between gap-2">
           <div>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-serif font-bold text-lg text-[#1c382b]">
-                {formatPrice(price)}
+              <span className="font-serif font-bold text-lg text-[#2e6844]">
+                {formatPrice(price * quantity)}
               </span>
               {originalPrice && (
                 <span className="text-xs line-through text-[#8aa18e]">
-                  {formatPrice(originalPrice)}
+                  {formatPrice(originalPrice * quantity)}
                 </span>
               )}
             </div>
             <span className="text-[10px] text-[#59735d] block">
-              Unit: {selectedPack}
+              Pack: {selectedPack}
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            className={`py-1.5 px-3 rounded-xl text-xs font-semibold shadow-2xs hover:shadow-sm transition-all flex items-center gap-1 cursor-pointer ${
-              justAdded
-                ? 'bg-[#2e6844] text-white'
-                : 'bg-[#1c382b] hover:bg-[#284c3b] text-white'
-            }`}
-            aria-label={`Add ${product.name} to basket`}
-          >
-            {justAdded ? (
-              <Check className="w-3.5 h-3.5 text-white" />
-            ) : (
-              <ShoppingBag className="w-3.5 h-3.5 text-[#8aa18e]" />
-            )}
-            <span>{justAdded ? 'Added' : 'Add'}</span>
-          </button>
+          <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+            {/* Quantity Stepper */}
+            <div className="flex items-center border border-[#c9d6cb] rounded-lg bg-white overflow-hidden text-xs">
+              <button
+                type="button"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="px-1.5 py-1 text-[#526f58] hover:bg-[#f6f1e7] cursor-pointer"
+                aria-label="Decrease quantity"
+              >
+                <Minus className="w-2.5 h-2.5" />
+              </button>
+              <span className="px-1.5 font-bold font-mono text-[11px] text-[#1c382b]">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() => setQuantity(quantity + 1)}
+                className="px-1.5 py-1 text-[#526f58] hover:bg-[#f6f1e7] cursor-pointer"
+                aria-label="Increase quantity"
+              >
+                <Plus className="w-2.5 h-2.5" />
+              </button>
+            </div>
+
+            {/* Signature Mint-Green Add Button (Matches video frame_044) */}
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className={`py-1.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs ${
+                justAdded
+                  ? 'bg-[#2e6844] text-white'
+                  : 'bg-[#d8ebe4] text-[#1c382b] hover:bg-[#c2e2d6]'
+              }`}
+              aria-label={`Add ${product.name} to basket`}
+            >
+              {justAdded ? (
+                <Check className="w-3.5 h-3.5 text-white" />
+              ) : (
+                <ShoppingBag className="w-3.5 h-3.5 text-[#2e6844]" />
+              )}
+              <span>{justAdded ? 'Added' : 'Add'}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

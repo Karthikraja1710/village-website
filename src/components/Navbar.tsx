@@ -475,13 +475,12 @@ export const Navbar: React.FC = () => {
             </button>
 
             <button
-              onClick={() => {
-                setActivePage('story');
-                setTimeout(() => {
-                  window.scrollTo({ top: 800, behavior: 'smooth' });
-                }, 100);
-              }}
-              className="text-xs uppercase tracking-wider font-bold text-[#eef3ef] hover:text-[#f5a894] transition-colors cursor-pointer py-1"
+              onClick={() => handleNavClick('brands')}
+              className={`text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer py-1 relative ${
+                activePage === 'brands'
+                  ? 'text-[#f5a894] after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#bf563b]'
+                  : 'text-[#eef3ef] hover:text-[#f5a894]'
+              }`}
             >
               Brands
             </button>
@@ -566,6 +565,14 @@ export const Navbar: React.FC = () => {
               }`}
             >
               Our Village Story &amp; Sourcing
+            </button>
+            <button
+              onClick={() => handleNavClick('brands')}
+              className={`px-4 py-2.5 text-left text-sm font-semibold rounded-xl transition-colors ${
+                activePage === 'brands' ? 'bg-[#1c382b] text-white' : 'text-[#1c382b] hover:bg-[#f6f1e7]'
+              }`}
+            >
+              Brands &amp; Grower Collectives
             </button>
             <button
               onClick={() => handleNavClick('contact')}
