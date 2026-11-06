@@ -108,3 +108,39 @@
 .shimmer-card {
   background-size: 200% 100%;
 }
+
+/* Cutout grain texture for stylized numbers */
+.text-cutout-grain {
+  background-image: url('https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80');
+  background-size: cover;
+  background-position: center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Parchment illustrated folk art cards */
+.parchment-card {
+  background-color: #faf4e8;
+  background-image: radial-gradient(#ebdcc5 0.75px, transparent 0.75px);
+  background-size: 16px 16px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.parchment-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px rgba(28, 56, 43, 0.12), 0 8px 10px -6px rgba(28, 56, 43, 0.08);
+}
+
+@keyframes grassSway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1.5deg);
+  }
+}
+
+.animate-sway {
+  animation: grassSway 4s ease-in-out infinite;
+}

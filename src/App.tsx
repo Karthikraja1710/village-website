@@ -7,6 +7,7 @@ import { ProductModal } from './components/ProductModal';
 import { CartDrawer } from './components/CartDrawer';
 import { AiAssistantModal } from './components/AiAssistantModal';
 import { PlaceholderSettingsModal } from './components/PlaceholderSettingsModal';
+import { CouponsModal } from './components/CouponsModal';
 import { ToastContainer } from './components/Toast';
 
 // Pages
@@ -66,6 +67,7 @@ const MainLayout: React.FC = () => {
       <CartDrawer />
       <AiAssistantModal />
       <PlaceholderSettingsModal />
+      <CouponsModal />
       <ToastContainer />
 
       {/* Mobile Sticky Bottom Nav Bar */}

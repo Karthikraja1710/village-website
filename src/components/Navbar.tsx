@@ -29,6 +29,7 @@ export const Navbar: React.FC = () => {
     setIsCartOpen,
     setIsAiAssistantOpen,
     setIsSettingsModalOpen,
+    setIsCouponsOpen,
     searchQuery,
     setSearchQuery,
     products,
@@ -427,8 +428,8 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* Center Navigation Links */}
-          <nav className="flex items-center gap-8">
+          {/* Center Navigation Links (Matching Image 2 exact structure) */}
+          <nav className="flex items-center gap-6 xl:gap-8">
             <button
               onClick={() => handleNavClick('home')}
               className={`text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer py-1 relative ${
@@ -447,18 +448,21 @@ export const Navbar: React.FC = () => {
                   : 'text-[#eef3ef] hover:text-[#f5a894]'
               }`}
             >
-              Shop All Harvest
+              Shop
             </button>
-            <button
-              onClick={() => handleNavClick('herbs')}
-              className={`text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer py-1 relative ${
-                activePage === 'herbs'
-                  ? 'text-[#f5a894] after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#bf563b]'
-                  : 'text-[#eef3ef] hover:text-[#f5a894]'
-              }`}
-            >
-              Herbs &amp; Traditional Pantry
-            </button>
+
+            {/* Categories dropdown link in nav */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsCategoryMenuOpen(!isCategoryMenuOpen)}
+                className="text-xs uppercase tracking-wider font-bold text-[#eef3ef] hover:text-[#f5a894] transition-colors cursor-pointer py-1 flex items-center gap-1"
+              >
+                <span>Categories</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isCategoryMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+            </div>
+
             <button
               onClick={() => handleNavClick('story')}
               className={`text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer py-1 relative ${
@@ -467,8 +471,41 @@ export const Navbar: React.FC = () => {
                   : 'text-[#eef3ef] hover:text-[#f5a894]'
               }`}
             >
-              Our Village Story
+              About Us
             </button>
+
+            <button
+              onClick={() => {
+                setActivePage('story');
+                setTimeout(() => {
+                  window.scrollTo({ top: 800, behavior: 'smooth' });
+                }, 100);
+              }}
+              className="text-xs uppercase tracking-wider font-bold text-[#eef3ef] hover:text-[#f5a894] transition-colors cursor-pointer py-1"
+            >
+              Brands
+            </button>
+
+            {/* Coupons link */}
+            <button
+              type="button"
+              onClick={() => setIsCouponsOpen(true)}
+              className="text-xs uppercase tracking-wider font-bold text-[#f5a894] hover:text-white transition-colors cursor-pointer py-1 flex items-center gap-1 bg-[#264a39] px-2.5 py-1 rounded-md"
+              title="View harvest vouchers & promo codes"
+            >
+              <span>Coupons</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#bf563b] animate-ping" />
+            </button>
+
+            {/* Terms & Conditions */}
+            <button
+              type="button"
+              onClick={() => setIsSettingsModalOpen(true)}
+              className="text-xs uppercase tracking-wider font-bold text-[#eef3ef] hover:text-[#f5a894] transition-colors cursor-pointer py-1 hidden xl:block"
+            >
+              Terms &amp; Conditions
+            </button>
+
             <button
               onClick={() => handleNavClick('contact')}
               className={`text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer py-1 relative ${
@@ -477,7 +514,7 @@ export const Navbar: React.FC = () => {
                   : 'text-[#eef3ef] hover:text-[#f5a894]'
               }`}
             >
-              Contact &amp; Sourcing
+              Contact
             </button>
           </nav>
 
@@ -537,6 +574,16 @@ export const Navbar: React.FC = () => {
               }`}
             >
               Contact &amp; Inquiries
+            </button>
+            <button
+              onClick={() => {
+                setIsCouponsOpen(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className="px-4 py-2.5 text-left text-sm font-semibold rounded-xl text-[#bf563b] bg-[#faeee9] hover:bg-[#f6dfb2] flex items-center justify-between"
+            >
+              <span>Vouchers &amp; Coupons</span>
+              <span className="text-[10px] bg-[#bf563b] text-white px-2 py-0.5 rounded-full font-bold">DISCOUNTS</span>
             </button>
             <button
               onClick={() => handleNavClick('dashboard')}

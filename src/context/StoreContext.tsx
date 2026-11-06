@@ -109,6 +109,8 @@ interface StoreContextType {
   setIsAiAssistantOpen: (open: boolean) => void;
   isSettingsModalOpen: boolean;
   setIsSettingsModalOpen: (open: boolean) => void;
+  isCouponsOpen: boolean;
+  setIsCouponsOpen: (open: boolean) => void;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   
@@ -136,6 +138,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAiAssistantOpen, setIsAiAssistantOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isCouponsOpen, setIsCouponsOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -605,6 +608,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setIsAiAssistantOpen,
         isSettingsModalOpen,
         setIsSettingsModalOpen,
+        isCouponsOpen,
+        setIsCouponsOpen,
         isAuthModalOpen,
         setIsAuthModalOpen,
         toasts,
